@@ -1,0 +1,30 @@
+TRIVIA FACULTAD DE MEDICINA UBA - VERSION 2
+
+CONTENIDO
+- trivia_UBA.html: aplicación completa.
+- preguntas.js: preguntas, respuestas y explicaciones. ESTE es el archivo que podés editar para cambiar preguntas sin tocar el programa.
+- imagenes/: carpeta destinada a las fotografías.
+
+MEJORAS INCLUIDAS
+1. Diseño táctil para tablet.
+2. Temporizador de 15 segundos + barra visual.
+3. Preguntas aleatorias.
+4. Respuestas aleatorias.
+5. Espacios para imágenes por pregunta.
+6. Sonidos generados por el navegador, sin archivos de audio externos.
+7. Resultado con correctas, incorrectas y sin responder.
+8. Animaciones.
+9. Explicación después de cada respuesta.
+10. Jugar nuevamente.
+11. Preguntas separadas en preguntas.js.
+
+IMAGENES
+Para agregar fotos locales:
+- Guardá las fotos dentro de la carpeta "imagenes".
+- En cada objeto de preguntas.js agregá, por ejemplo:
+  imagen: "imagenes/museo_anatomia.jpg",
+- Usá nombres simples, sin tildes ni espacios.
+
+IMPORTANTE
+La versión funciona sin Internet si las imágenes también están guardadas localmente.
+Los datos de las preguntas deben revisarse con las fuentes oficiales de la Facultad antes de una exhibición pública.

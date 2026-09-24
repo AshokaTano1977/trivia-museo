@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia - Facultad de Medicina UBA y sus Museos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Pantalla 1: Ingreso de Nombre -->
+    <div id="pantalla-inicio" class="pantalla">
+        <h1>Trivia: Museos de la Facultad de Medicina UBA</h1>
+        <p>Ingresa tu nombre o iniciales para comenzar:</p>
+        <input type="text" id="nombre-jugador" placeholder="Ej: Juan M." maxlength="20" required>
+        <br><br>
+        <button id="btn-comenzar">¡Comenzar a Jugar!</button>
+        
+        <!-- Tabla de Mejores Puntajes -->
+        <div id="contenedor-ranking">
+            <h3>🏆 Mejores Puntajes (Ranking)</h3>
+            <ol id="lista-ranking">
+                <li>Aún no hay registros</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Pantalla 2: El Juego (Oculto al inicio) -->
+    <div id="pantalla-juego" class="pantalla" style="display:none;">
+        <div class="header-juego">
+            <span id="info-jugador">Jugador: </span>
+            <span id="info-puntaje">Puntaje: 0</span>
+        </div>
+        
+        <div class="caja-pregunta">
+            <h2 id="texto-pregunta">Pregunta aquí...</h2>
+            <div id="contenedor-imagen"></div>
+            <div id="opciones-container">
+                <!-- Los botones de opciones se cargan dinámicamente -->
+            </div>
+        </div>
+        <p id="explicacion-texto" style="display:none;"></p>
+    </div>
+
+    <!-- Pantalla 3: Resultado Final (Oculto al inicio) -->
+    <div id="pantalla-final" class="pantalla" style="display:none;">
+        <h2>¡Partida Finalizada!</h2>
+        <p id="resultado-final"></p>
+        <button id="btn-reiniciar">Jugar Nuevamente</button>
+    </div>
+
+    <script src="preguntas.js"></script>
+</body>
+</html>
