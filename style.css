@@ -1,0 +1,230 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --azul: #164e63;
+    --azul-secundario: #0e7490;
+    --fondo: #eef6f8;
+    --verde: #16a34a;
+    --rojo: #dc2626;
+    --gris: #e2e8f0;
+    --texto: #17202a;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 24px 14px;
+    background: linear-gradient(135deg, var(--fondo), #dbeafe);
+    color: var(--texto);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.pantalla {
+    width: min(100%, 900px);
+    min-height: calc(100vh - 48px);
+    margin: 0 auto;
+    padding: clamp(18px, 4vw, 36px);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 8px 30px rgb(0 0 0 / 12%);
+    text-align: center;
+}
+
+h1,
+.pantalla > h2 {
+    margin: 8px 0 18px;
+    color: var(--azul);
+}
+
+h1 {
+    font-size: clamp(30px, 7vw, 48px);
+}
+
+.pantalla p {
+    font-size: clamp(17px, 3.5vw, 21px);
+    line-height: 1.45;
+}
+
+#nombre-jugador {
+    width: min(100%, 520px);
+    margin: 10px 0;
+    padding: 16px 18px;
+    border: 2px solid #cbd5e1;
+    border-radius: 14px;
+    font: inherit;
+    font-size: 19px;
+    text-align: center;
+}
+
+#nombre-jugador:focus-visible,
+button:focus-visible {
+    outline: 3px solid #38bdf8;
+    outline-offset: 3px;
+}
+
+button {
+    border: 0;
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    touch-action: manipulation;
+}
+
+#btn-comenzar,
+#btn-reiniciar {
+    display: block;
+    width: min(100%, 520px);
+    margin: 18px auto;
+    padding: 18px 22px;
+    background: var(--azul);
+    color: #fff;
+    font-size: clamp(20px, 4vw, 27px);
+    font-weight: 700;
+}
+
+#btn-comenzar:hover,
+#btn-reiniciar:hover {
+    background: var(--azul-secundario);
+}
+
+#contenedor-ranking {
+    width: min(100%, 520px);
+    margin: 30px auto 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--gris);
+    text-align: left;
+}
+
+#contenedor-ranking h3 {
+    margin: 0 0 12px;
+    color: var(--azul);
+    font-size: 20px;
+}
+
+#lista-ranking {
+    margin: 0;
+    padding-left: 28px;
+    font-size: 17px;
+    line-height: 1.8;
+}
+
+.header-juego {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 14px;
+    border-bottom: 5px solid var(--gris);
+    color: var(--azul);
+    font-size: clamp(17px, 4vw, 22px);
+    font-weight: 700;
+    text-align: left;
+}
+
+.caja-pregunta {
+    padding-top: 10px;
+}
+
+#texto-pregunta {
+    margin: 20px 0;
+    font-size: clamp(24px, 5vw, 35px);
+    line-height: 1.25;
+}
+
+#contenedor-imagen {
+    display: flex;
+    min-height: 170px;
+    max-height: 300px;
+    margin: 16px 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #e2e8f0;
+}
+
+#contenedor-imagen:empty {
+    display: none;
+}
+
+#contenedor-imagen img {
+    width: 100%;
+    max-width: 100%;
+    max-height: 300px !important;
+    margin: 0 !important;
+    object-fit: contain;
+}
+
+#opciones-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.btn-opcion {
+    width: 100%;
+    min-height: 72px;
+    padding: 17px;
+    background: var(--gris);
+    color: var(--texto);
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 700;
+    text-align: left;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btn-opcion:not(:disabled):hover {
+    background: #cbd5e1;
+}
+
+.btn-opcion:disabled {
+    cursor: default;
+}
+
+#explicacion-texto {
+    margin: 18px 0 0;
+    padding: 16px;
+    border-radius: 14px;
+    background: #f0fdf4;
+    font-size: 18px;
+    line-height: 1.45;
+    text-align: left;
+}
+
+#resultado-final {
+    width: min(100%, 680px);
+    margin: 24px auto;
+    color: var(--azul);
+    font-size: clamp(25px, 5vw, 38px);
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+@media (min-width: 650px) {
+    #opciones-container {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .btn-opcion:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 12px 8px;
+    }
+
+    .pantalla {
+        min-height: calc(100vh - 24px);
+        padding: 18px 14px;
+    }
+
+    .header-juego {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+    }
+}
