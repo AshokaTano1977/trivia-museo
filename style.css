@@ -47,6 +47,15 @@ h1 {
     line-height: 1.45;
 }
 
+.detalle-juego,
+.etiqueta-nombre {
+    font-size: 15px !important;
+}
+
+.etiqueta-nombre {
+    margin-bottom: 4px;
+}
+
 #nombre-jugador {
     width: min(100%, 520px);
     margin: 10px 0;
