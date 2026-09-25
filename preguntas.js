@@ -26,6 +26,10 @@ let preguntasPartida = [];
 let indicePreguntaActual = 0;
 let puntajeActual = 0;
 let nombreJugador = "";
+let temporizadorPregunta = null;
+let temporizadorAvance = null;
+let preguntaRespondida = false;
+const TIEMPO_POR_PREGUNTA = 15;
 
 // Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
@@ -104,6 +108,8 @@ function obtenerPreguntasDisponibles() {
 }
 
 function iniciarTrivia() {
+    clearInterval(temporizadorPregunta);
+    clearTimeout(temporizadorAvance);
     let pool = obtenerPreguntasDisponibles();
     // Mezclar aleatoriamente y tomar 10 (o las que haya)
     preguntasPartida = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
@@ -112,7 +118,7 @@ function iniciarTrivia() {
 
     // Cambiar de pantalla
     document.getElementById("pantalla-inicio").style.display = "none";
-    document.getElementById("pantalla-juego").style.display = "block";
+    document.getElementById("pantalla-juego").style.display = "flex";
 
     document.getElementById("info-jugador").textContent = `Jugador: ${nombreJugador}`;
     
@@ -120,11 +126,17 @@ function iniciarTrivia() {
 }
 
 function mostrarPreguntaActual() {
+    clearInterval(temporizadorPregunta);
+    clearTimeout(temporizadorAvance);
     if (indicePreguntaActual >= preguntasPartida.length) {
         finalizarTrivia();
         return;
     }
 
+    preguntaRespondida = false;
+    document.getElementById("tiempo-restante").textContent = TIEMPO_POR_PREGUNTA;
+    document.querySelector(".reloj-pregunta").classList.remove("reloj-urgente");
+    document.getElementById("explicacion-texto").style.display = "none";
     const q = preguntasPartida[indicePreguntaActual];
     document.getElementById("info-puntaje").textContent = `Puntaje: ${puntajeActual}`;
     document.getElementById("texto-pregunta").textContent = `${indicePreguntaActual + 1}. ${q.pregunta}`;
@@ -153,9 +165,29 @@ function mostrarPreguntaActual() {
         btn.onclick = () => evaluarRespuesta(index, q.correcta);
         opcionesContainer.appendChild(btn);
     });
+
+    iniciarTemporizador();
+}
+
+function iniciarTemporizador() {
+    let tiempoRestante = TIEMPO_POR_PREGUNTA;
+    temporizadorPregunta = setInterval(() => {
+        tiempoRestante--;
+        document.getElementById("tiempo-restante").textContent = tiempoRestante;
+        document.querySelector(".reloj-pregunta").classList.toggle("reloj-urgente", tiempoRestante <= 5);
+
+        if (tiempoRestante <= 0) {
+            clearInterval(temporizadorPregunta);
+            temporizadorPregunta = null;
+            tiempoAgotado();
+        }
+    }, 1000);
 }
 
 function evaluarRespuesta(elegida, correcta) {
+    if (preguntaRespondida) return;
+    preguntaRespondida = true;
+    clearInterval(temporizadorPregunta);
     const botones = document.querySelectorAll(".btn-opcion");
     botones.forEach(b => b.disabled = true); // Desactivar clics múltiples
 
@@ -167,13 +199,35 @@ function evaluarRespuesta(elegida, correcta) {
         botones[correcta].style.backgroundColor = "#4CAF50"; // Marcar la correcta
     }
 
-    setTimeout(() => {
+    document.getElementById("info-puntaje").textContent = `Puntaje: ${puntajeActual}`;
+    temporizadorAvance = setTimeout(() => {
         indicePreguntaActual++;
         mostrarPreguntaActual();
     }, 1500); // Pausa de 1.5 segundos para ver el resultado
 }
 
+function tiempoAgotado() {
+    if (preguntaRespondida) return;
+    preguntaRespondida = true;
+
+    const pregunta = preguntasPartida[indicePreguntaActual];
+    const botones = document.querySelectorAll(".btn-opcion");
+    botones.forEach((boton) => boton.disabled = true);
+    botones[pregunta.correcta].style.backgroundColor = "#4CAF50";
+
+    const explicacion = document.getElementById("explicacion-texto");
+    explicacion.textContent = `Se acabó el tiempo. ${pregunta.explicacion || "La respuesta correcta está marcada en verde."}`;
+    explicacion.style.display = "block";
+
+    temporizadorAvance = setTimeout(() => {
+        indicePreguntaActual++;
+        mostrarPreguntaActual();
+    }, 1500);
+}
+
 function finalizarTrivia() {
+    clearInterval(temporizadorPregunta);
+    clearTimeout(temporizadorAvance);
     document.getElementById("pantalla-juego").style.display = "none";
     document.getElementById("pantalla-final").style.display = "block";
 

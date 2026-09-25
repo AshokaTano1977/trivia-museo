@@ -31,9 +31,9 @@
 
     <!-- Pantalla 2: El Juego (Oculto al inicio) -->
     <div id="pantalla-juego" class="pantalla" style="display:none;">
-        <div class="header-juego">
-            <span id="info-jugador">Jugador: </span>
-            <span id="info-puntaje">Puntaje: 0</span>
+        <div class="reloj-pregunta" role="timer" aria-label="Tiempo para responder">
+            <span id="tiempo-restante">15</span>
+            <span class="unidad-tiempo">s</span>
         </div>
         
         <div class="caja-pregunta">
@@ -44,6 +44,10 @@
             </div>
         </div>
         <p id="explicacion-texto" style="display:none;"></p>
+        <footer class="pie-juego">
+            <span id="info-jugador">Jugador: </span>
+            <span id="info-puntaje">Puntaje: 0</span>
+        </footer>
     </div>
 
     <!-- Pantalla 3: Resultado Final (Oculto al inicio) -->

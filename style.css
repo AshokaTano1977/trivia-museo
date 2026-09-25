@@ -119,13 +119,45 @@ button {
     line-height: 1.8;
 }
 
-.header-juego {
+#pantalla-juego {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.reloj-pregunta {
+    display: flex;
+    width: 68px;
+    height: 68px;
+    margin: 0 0 4px auto;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--azul-secundario);
+    border-radius: 50%;
+    color: var(--azul);
+    font-size: 27px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    transition: border-color 150ms ease, color 150ms ease;
+}
+
+.unidad-tiempo {
+    margin-left: 2px;
+    font-size: 13px;
+}
+
+.reloj-pregunta.reloj-urgente {
+    border-color: var(--rojo);
+    color: var(--rojo);
+}
+
+.pie-juego {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 14px;
-    padding-bottom: 14px;
-    border-bottom: 5px solid var(--gris);
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--gris);
     color: var(--azul);
     font-size: clamp(17px, 4vw, 22px);
     font-weight: 700;
@@ -231,9 +263,7 @@ button {
         padding: 18px 14px;
     }
 
-    .header-juego {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 6px;
+    .pie-juego {
+        font-size: 16px;
     }
 }
