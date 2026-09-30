@@ -1,7 +1,8 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
 const SHEET_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxR5khOYaHreha63-QmafA51erModGXeEL2-Ycgh8kYsURMHZm5DIi7KD4ZBdc7w-mZ6El0-o2td8k/pub?gid=0&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 //Fer
+// "https://docs.google.com/spreadsheets/d/e/2PACX-1vSxR5khOYaHreha63-QmafA51erModGXeEL2-Ycgh8kYsURMHZm5DIi7KD4ZBdc7w-mZ6El0-o2td8k/pub?gid=0&single=true&output=csv";
 //Ceci abajo
 //"https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
@@ -10,7 +11,7 @@ let preguntasRespaldo = [
   {
     id: 1,
     pregunta:
-      "¿Fer En qué año fue creada formalmente la Facultad de Medicina de la UBA?",
+      "¿Ceci En qué año fue creada formalmente la Facultad de Medicina de la UBA?",
     opciones: ["1821", "1852", "1887"],
     correcta: 1, // Índice 1 = segunda opción (1852)
     explicacion: "Fue creada formalmente en 1852.",
@@ -19,7 +20,7 @@ let preguntasRespaldo = [
   {
     id: 2,
     pregunta:
-      "¿Fer Dónde funciona actualmente la Facultad de Medicina de la UBA?",
+      "¿Ceci Dónde funciona actualmente la Facultad de Medicina de la UBA?",
     opciones: ["Av. Córdoba", "Paraguay 2155", "Av. Las Heras"],
     correcta: 1,
     explicacion: "Funciona en Paraguay 2155.",
