@@ -1,6 +1,6 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
-
+//Ceciiiii
 // Preguntas de respaldo (Offline / Garantizadas)
 let preguntasRespaldo = [
     {
