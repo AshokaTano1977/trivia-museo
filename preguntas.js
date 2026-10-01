@@ -29,6 +29,7 @@ let nombreJugador = "";
 let temporizadorPregunta = null;
 let temporizadorAvance = null;
 let preguntaRespondida = false;
+let contextoAudio = null;
 const TIEMPO_POR_PREGUNTA = 15;
 
 // Inicialización al cargar la página
@@ -110,6 +111,7 @@ function obtenerPreguntasDisponibles() {
 function iniciarTrivia() {
     clearInterval(temporizadorPregunta);
     clearTimeout(temporizadorAvance);
+    prepararAudio();
     let pool = obtenerPreguntasDisponibles();
     // Mezclar aleatoriamente y tomar 10 (o las que haya)
     preguntasPartida = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
@@ -170,10 +172,23 @@ function mostrarPreguntaActual() {
 }
 
 function iniciarTemporizador() {
-    let tiempoRestante = TIEMPO_POR_PREGUNTA;
+    const barraTiempo = document.getElementById("barra-tiempo");
+    const contenedorBarra = barraTiempo.parentElement;
+    const inicio = performance.now();
+
+    barraTiempo.style.width = "100%";
+    document.getElementById("tiempo-restante").textContent = TIEMPO_POR_PREGUNTA;
+    contenedorBarra.setAttribute("aria-valuenow", TIEMPO_POR_PREGUNTA);
+    contenedorBarra.setAttribute("aria-valuetext", `${TIEMPO_POR_PREGUNTA} segundos`);
+
     temporizadorPregunta = setInterval(() => {
-        tiempoRestante--;
-        document.getElementById("tiempo-restante").textContent = tiempoRestante;
+        const tiempoRestante = Math.max(0, TIEMPO_POR_PREGUNTA - (performance.now() - inicio) / 1000);
+        const segundosRestantes = Math.ceil(tiempoRestante);
+
+        barraTiempo.style.width = `${(tiempoRestante / TIEMPO_POR_PREGUNTA) * 100}%`;
+        document.getElementById("tiempo-restante").textContent = segundosRestantes;
+        contenedorBarra.setAttribute("aria-valuenow", segundosRestantes);
+        contenedorBarra.setAttribute("aria-valuetext", `${segundosRestantes} segundos`);
         document.querySelector(".reloj-pregunta").classList.toggle("reloj-urgente", tiempoRestante <= 5);
 
         if (tiempoRestante <= 0) {
@@ -204,10 +219,12 @@ function evaluarRespuesta(elegida, correcta) {
         puntajeActual += 10;
         botones[elegida].style.backgroundColor = "#4CAF50"; // Verde
         mensajeExplicacion = `¡Correcto! ${pregunta.explicacion || "La respuesta elegida fue la correcta."}`;
+        reproducirSonido("correcta");
     } else {
         botones[elegida].style.backgroundColor = "#f44336"; // Rojo
         botones[correcta].style.backgroundColor = "#4CAF50"; // Marcar la correcta
         mensajeExplicacion = `Respuesta incorrecta. ${pregunta.explicacion || "La respuesta correcta fue la opción resaltada en verde."}`;
+        reproducirSonido("incorrecta");
     }
 
     document.getElementById("info-puntaje").textContent = `Puntaje: ${puntajeActual}`;
@@ -222,6 +239,7 @@ function evaluarRespuesta(elegida, correcta) {
 function tiempoAgotado() {
     if (preguntaRespondida) return;
     preguntaRespondida = true;
+    reproducirSonido("tiempoAgotado");
 
     const pregunta = preguntasPartida[indicePreguntaActual];
     const botones = document.querySelectorAll(".btn-opcion");
@@ -234,6 +252,59 @@ function tiempoAgotado() {
         indicePreguntaActual++;
         mostrarPreguntaActual();
     }, 1500);
+}
+
+function prepararAudio() {
+    const AudioContextDisponible = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextDisponible) {
+        console.warn("Este navegador no admite la reproducción de sonidos.");
+        return;
+    }
+
+    if (!contextoAudio) {
+        contextoAudio = new AudioContextDisponible();
+    }
+
+    contextoAudio.resume().catch((error) => {
+        console.error("No se pudo activar el audio de la trivia.", error);
+    });
+}
+
+function reproducirSonido(tipo) {
+    if (!contextoAudio) return;
+
+    const secuencias = {
+        correcta: [
+            { frecuencia: 523.25, duracion: 0.14 },
+            { frecuencia: 659.25, duracion: 0.14 },
+            { frecuencia: 783.99, duracion: 0.2 }
+        ],
+        incorrecta: [
+            { frecuencia: 311.13, duracion: 0.2 },
+            { frecuencia: 233.08, duracion: 0.28 }
+        ],
+        tiempoAgotado: [
+            { frecuencia: 392, duracion: 0.22 },
+            { frecuencia: 293.66, duracion: 0.3 }
+        ]
+    };
+    const secuencia = secuencias[tipo];
+    let inicio = contextoAudio.currentTime;
+
+    secuencia.forEach(({ frecuencia, duracion }) => {
+        const oscilador = contextoAudio.createOscillator();
+        const volumen = contextoAudio.createGain();
+        oscilador.type = "sine";
+        oscilador.frequency.setValueAtTime(frecuencia, inicio);
+        volumen.gain.setValueAtTime(0.0001, inicio);
+        volumen.gain.exponentialRampToValueAtTime(0.16, inicio + 0.02);
+        volumen.gain.exponentialRampToValueAtTime(0.0001, inicio + duracion);
+        oscilador.connect(volumen);
+        volumen.connect(contextoAudio.destination);
+        oscilador.start(inicio);
+        oscilador.stop(inicio + duracion);
+        inicio += duracion;
+    });
 }
 
 function finalizarTrivia() {

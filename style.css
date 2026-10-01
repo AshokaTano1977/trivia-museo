@@ -151,6 +151,28 @@ button {
     color: var(--rojo);
 }
 
+.barra-tiempo-contenedor {
+    width: 100%;
+    height: 14px;
+    margin: 8px 0 18px;
+    overflow: hidden;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    background: #e2e8f0;
+}
+
+#barra-tiempo {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--verde);
+    transition: width 50ms linear, background-color 250ms ease;
+}
+
+.reloj-pregunta.reloj-urgente ~ .barra-tiempo-contenedor #barra-tiempo {
+    background: var(--rojo);
+}
+
 .pie-juego {
     display: flex;
     justify-content: space-between;
