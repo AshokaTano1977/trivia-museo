@@ -225,13 +225,27 @@ button {
 }
 
 #explicacion-texto {
-    margin: 18px 0 0;
-    padding: 16px;
+    margin: 22px 0 0;
+    padding: 20px 22px;
+    border: 2px solid #f59e0b;
+    border-left-width: 8px;
     border-radius: 14px;
-    background: #f0fdf4;
-    font-size: 18px;
-    line-height: 1.45;
+    background: #fffbeb;
+    box-shadow: 0 4px 14px rgb(180 83 9 / 14%);
+    color: #713f12;
+    font-size: clamp(18px, 3.5vw, 21px);
+    font-weight: 600;
+    line-height: 1.5;
     text-align: left;
+}
+
+#explicacion-texto::before {
+    display: block;
+    margin-bottom: 6px;
+    color: #92400e;
+    content: "💡 Explicación";
+    font-size: 17px;
+    font-weight: 700;
 }
 
 #resultado-final {
