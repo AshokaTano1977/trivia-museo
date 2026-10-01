@@ -184,6 +184,12 @@ function iniciarTemporizador() {
     }, 1000);
 }
 
+function mostrarExplicacion(mensaje) {
+    const explicacion = document.getElementById("explicacion-texto");
+    explicacion.textContent = mensaje;
+    explicacion.style.display = "block";
+}
+
 function evaluarRespuesta(elegida, correcta) {
     if (preguntaRespondida) return;
     preguntaRespondida = true;
@@ -191,15 +197,22 @@ function evaluarRespuesta(elegida, correcta) {
     const botones = document.querySelectorAll(".btn-opcion");
     botones.forEach(b => b.disabled = true); // Desactivar clics múltiples
 
+    const pregunta = preguntasPartida[indicePreguntaActual];
+    let mensajeExplicacion = "";
+
     if (elegida === correcta) {
         puntajeActual += 10;
         botones[elegida].style.backgroundColor = "#4CAF50"; // Verde
+        mensajeExplicacion = `¡Correcto! ${pregunta.explicacion || "La respuesta elegida fue la correcta."}`;
     } else {
         botones[elegida].style.backgroundColor = "#f44336"; // Rojo
         botones[correcta].style.backgroundColor = "#4CAF50"; // Marcar la correcta
+        mensajeExplicacion = `Respuesta incorrecta. ${pregunta.explicacion || "La respuesta correcta fue la opción resaltada en verde."}`;
     }
 
     document.getElementById("info-puntaje").textContent = `Puntaje: ${puntajeActual}`;
+    mostrarExplicacion(mensajeExplicacion);
+
     temporizadorAvance = setTimeout(() => {
         indicePreguntaActual++;
         mostrarPreguntaActual();
@@ -215,9 +228,7 @@ function tiempoAgotado() {
     botones.forEach((boton) => boton.disabled = true);
     botones[pregunta.correcta].style.backgroundColor = "#4CAF50";
 
-    const explicacion = document.getElementById("explicacion-texto");
-    explicacion.textContent = `Se acabó el tiempo. ${pregunta.explicacion || "La respuesta correcta está marcada en verde."}`;
-    explicacion.style.display = "block";
+    mostrarExplicacion(`Se acabó el tiempo. ${pregunta.explicacion || "La respuesta correcta está marcada en verde."}`);
 
     temporizadorAvance = setTimeout(() => {
         indicePreguntaActual++;
