@@ -313,9 +313,34 @@ function finalizarTrivia() {
     actualizarRankingVisual();
 }
 
+
+function guardarPuntajeEnRanking(nombreJugador, puntos, correctasTotales) {
+  const datosJugador = {
+    nombre: nombreJugador,
+    puntaje: puntos,
+    correctas: correctasTotales
+  };
+
+  fetch(SHEET_CSV_URL, {
+    method: "POST",
+    mode: "no-cors", // Necesario para llamadas a Apps Script desde páginas locales o externas
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(datosJugador)
+  })
+  .then(() => {
+    console.log("¡Puntaje enviado a la hoja Ranking con éxito!");
+  })
+  .catch(error => {
+    console.error("Error al enviar el puntaje:", error);
+  });
+}
+
+
 function guardarEnRanking(nombre, puntos) {
-    let ranking = JSON.parse(localStorage.getItem("trivia_ranking_uba")) || [];
-    ranking.push({ nombre, puntos, fecha: new Date().toLocaleDateString() });
+    let ranking = JSON.parse(localStorage.getItem("trivia_ranking_uba")) || [];    
+    ranking.push({ fecha: new Date().toLocaleDateString(),nombre, puntos });
     ranking.sort((a, b) => b.puntos - a.puntos);
     ranking = ranking.slice(0, 5); // Top 5
     localStorage.setItem("trivia_ranking_uba", JSON.stringify(ranking));
