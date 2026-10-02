@@ -1,6 +1,6 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
-//Ceciiiii
+
 // Preguntas de respaldo (Offline / Garantizadas)
 let preguntasRespaldo = [
     {
@@ -31,6 +31,7 @@ let temporizadorAvance = null;
 let preguntaRespondida = false;
 let contextoAudio = null;
 const TIEMPO_POR_PREGUNTA = 15;
+const TIEMPO_EXPLICACION = 5000;
 
 // Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
@@ -52,12 +53,6 @@ window.addEventListener("DOMContentLoaded", () => {
         iniciarTrivia();
     });
 
-        document.getElementById("btn-reiniciar").addEventListener("click", () => {
-        document.getElementById("pantalla-final").style.display = "none";
-        document.getElementById("pantalla-inicio").style.display = "block";
-        document.getElementById("nombre-jugador").value = "";
-        actualizarRankingVisual();
-    });
 });
 
 async function sincronizarGoogleSheets() {
@@ -233,7 +228,7 @@ function evaluarRespuesta(elegida, correcta) {
     temporizadorAvance = setTimeout(() => {
         indicePreguntaActual++;
         mostrarPreguntaActual();
-    }, 1500); // Pausa de 1.5 segundos para ver el resultado
+    }, TIEMPO_EXPLICACION);
 }
 
 function tiempoAgotado() {
@@ -251,7 +246,7 @@ function tiempoAgotado() {
     temporizadorAvance = setTimeout(() => {
         indicePreguntaActual++;
         mostrarPreguntaActual();
-    }, 1500);
+    }, TIEMPO_EXPLICACION);
 }
 
 function prepararAudio() {

@@ -31,19 +31,21 @@
 
     <!-- Pantalla 2: El Juego (Oculto al inicio) -->
     <div id="pantalla-juego" class="pantalla" style="display:none;">
-        <div class="reloj-pregunta" role="timer" aria-label="Tiempo para responder">
-            <span id="tiempo-restante">15</span>
-            <span class="unidad-tiempo">s</span>
-        </div>
-        <div
-            class="barra-tiempo-contenedor"
-            role="progressbar"
-            aria-label="Tiempo restante"
-            aria-valuemin="0"
-            aria-valuemax="15"
-            aria-valuenow="15"
-        >
-            <div id="barra-tiempo"></div>
+        <div class="temporizador-pregunta">
+            <div class="reloj-pregunta" role="timer" aria-label="Tiempo para responder">
+                <span id="tiempo-restante">15</span>
+                <span class="unidad-tiempo">s</span>
+            </div>
+            <div
+                class="barra-tiempo-contenedor"
+                role="progressbar"
+                aria-label="Tiempo restante"
+                aria-valuemin="0"
+                aria-valuemax="15"
+                aria-valuenow="15"
+            >
+                <div id="barra-tiempo"></div>
+            </div>
         </div>
         
         <div class="caja-pregunta">
@@ -64,7 +66,6 @@
     <div id="pantalla-final" class="pantalla" style="display:none;">
         <h2>¡Partida Finalizada!</h2>
         <p id="resultado-final"></p>
-        <button id="btn-reiniciar">Jugar Nuevamente</button>
     </div>
 
     <script src="preguntas.js"></script>

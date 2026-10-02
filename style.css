@@ -81,8 +81,7 @@ button {
     touch-action: manipulation;
 }
 
-#btn-comenzar,
-#btn-reiniciar {
+#btn-comenzar {
     display: block;
     width: min(100%, 520px);
     margin: 18px auto;
@@ -93,8 +92,7 @@ button {
     font-weight: 700;
 }
 
-#btn-comenzar:hover,
-#btn-reiniciar:hover {
+#btn-comenzar:hover {
     background: var(--azul-secundario);
 }
 
@@ -125,11 +123,18 @@ button {
     align-items: stretch;
 }
 
+.temporizador-pregunta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
 .reloj-pregunta {
     display: flex;
+    flex: 0 0 68px;
     width: 68px;
     height: 68px;
-    margin: 0 0 4px auto;
     align-items: center;
     justify-content: center;
     border: 3px solid var(--azul-secundario);
@@ -152,9 +157,10 @@ button {
 }
 
 .barra-tiempo-contenedor {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     height: 14px;
-    margin: 8px 0 18px;
+    margin: 0;
     overflow: hidden;
     border: 1px solid #cbd5e1;
     border-radius: 999px;

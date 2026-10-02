@@ -15,8 +15,7 @@ MEJORAS INCLUIDAS
 7. Resultado con correctas, incorrectas y sin responder.
 8. Animaciones.
 9. Explicación después de cada respuesta.
-10. Jugar nuevamente.
-11. Preguntas separadas en preguntas.js.
+10. Preguntas separadas en preguntas.js.
 
 IMAGENES
 Para agregar fotos locales:
