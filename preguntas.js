@@ -31,12 +31,10 @@ let temporizadorAvance = null;
 let preguntaRespondida = false;
 let contextoAudio = null;
 const TIEMPO_POR_PREGUNTA = 15;
-const TIEMPO_EXPLICACION = 5000;
+const TIEMPO_EXPLICACION = 9000;
 
 // Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
-    actualizarRankingVisual();
-
     // Intentar actualizar desde Google Sheets en segundo plano
     sincronizarGoogleSheets();
 
@@ -311,6 +309,7 @@ function finalizarTrivia() {
     document.getElementById("resultado-final").textContent = `¡Excelente trabajo, ${nombreJugador}! Tu puntaje final es de ${puntajeActual} puntos.`;
 
     guardarEnRanking(nombreJugador, puntajeActual);
+    actualizarRankingVisual();
 }
 
 function guardarEnRanking(nombre, puntos) {

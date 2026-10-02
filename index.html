@@ -19,14 +19,6 @@
         <input type="text" id="nombre-jugador" placeholder="Ej: Juan M." maxlength="20" required>
         <br><br>
         <button id="btn-comenzar">¡Comenzar a Jugar!</button>
-        
-        <!-- Tabla de Mejores Puntajes -->
-        <div id="contenedor-ranking">
-            <h3>🏆 Mejores Puntajes (Ranking)</h3>
-            <ol id="lista-ranking">
-                <li>Aún no hay registros</li>
-            </ol>
-        </div>
     </div>
 
     <!-- Pantalla 2: El Juego (Oculto al inicio) -->
@@ -66,6 +58,12 @@
     <div id="pantalla-final" class="pantalla" style="display:none;">
         <h2>¡Partida Finalizada!</h2>
         <p id="resultado-final"></p>
+        <div id="contenedor-ranking">
+            <h3>🏆 Mejores Puntajes (Ranking)</h3>
+            <ol id="lista-ranking">
+                <li>Aún no hay registros</li>
+            </ol>
+        </div>
     </div>
 
     <script src="preguntas.js"></script>
