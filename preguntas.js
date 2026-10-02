@@ -34,7 +34,7 @@ let temporizadorAvance = null;
 let preguntaRespondida = false;
 let contextoAudio = null;
 const TIEMPO_POR_PREGUNTA = 15;
-const TIEMPO_EXPLICACION = 9000;
+const TIEMPO_EXPLICACION = 6000;
 
 // Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
