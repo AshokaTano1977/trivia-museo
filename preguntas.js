@@ -1,6 +1,7 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
 const SHEET_CSV_URL ="https://script.google.com/macros/s/AKfycbxKRb39YLsVz3Z6zPwD4w9f4eczK-BKLNhyYFf9y1RqeDkNOuZFzIIX4a4C9yRoC0qYEg/exec"
-//https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
+const URL_WEB_APP="https://script.google.com/macros/s/AKfycbxKRb39YLsVz3Z6zPwD4w9f4eczK-BKLNhyYFf9y1RqeDkNOuZFzIIX4a4C9yRoC0qYEg/exec"
+/https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
 // Preguntas de respaldo (Offline / Garantizadas)
 let preguntasRespaldo = [
@@ -314,6 +315,34 @@ function finalizarTrivia() {
 }
 
 
+//const URL_WEB_APP = "TU_URL_DE_EXEC_AQUI"; // Tu URL de Apps Script que termina en /exec
+
+function guardarPuntaje(nombreJugador, puntajeTotal, respuestasCorrectas) {
+  const datosJugador = {
+    nombre: nombreJugador,
+    puntaje: puntajeTotal,
+    correctas: respuestasCorrectas
+  };
+
+  fetch(URL_WEB_APP, {
+    method: "POST",
+    // Usamos text/plain para evitar el bloqueo de CORS y que el body llegue completo
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(datosJugador)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log("¡Guardado con éxito en el ranking!", data);
+    // Aquí puedes avanzar a la pantalla de felicitaciones o mostrar el ranking
+  })
+  .catch(error => {
+    console.error("Error al guardar:", error);
+  });
+}
+
+
 function guardarPuntajeEnRanking(nombreJugador, puntos, correctasTotales) {
   const datosJugador = {
     nombre: nombreJugador,
@@ -321,7 +350,7 @@ function guardarPuntajeEnRanking(nombreJugador, puntos, correctasTotales) {
     correctas: correctasTotales
   };
 
-  fetch(SHEET_CSV_URL, {
+  fetch(URL_WEB_APP, {
     method: "POST",
     mode: "no-cors", // Necesario para llamadas a Apps Script desde páginas locales o externas
     headers: {
