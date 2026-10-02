@@ -1,7 +1,7 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
-const SHEET_CSV_URL ="https://script.google.com/macros/s/AKfycbxKRb39YLsVz3Z6zPwD4w9f4eczK-BKLNhyYFf9y1RqeDkNOuZFzIIX4a4C9yRoC0qYEg/exec"
-const URL_WEB_APP="https://script.google.com/macros/s/AKfycbxKRb39YLsVz3Z6zPwD4w9f4eczK-BKLNhyYFf9y1RqeDkNOuZFzIIX4a4C9yRoC0qYEg/exec"
-/https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
+const SHEET_CSV_URL ="https://script.google.com/macros/s/AKfycbxKRb39YLsVz3Z6zPwD4w9f4eczK-BKLNhyYFf9y1RqeDkNOuZFzIIX4a4C9yRoC0qYEg/exec";
+const URL_WEB_APP="https://script.google.com/macros/s/AKfycbxKRb39YLsVz3Z6zPwD4w9f4eczK-BKLNhyYFf9y1RqeDkNOuZFzIIX4a4C9yRoC0qYEg/exec";
+//https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
 // Preguntas de respaldo (Offline / Garantizadas)
 let preguntasRespaldo = [
@@ -27,6 +27,7 @@ let preguntasRespaldo = [
 let preguntasPartida = [];
 let indicePreguntaActual = 0;
 let puntajeActual = 0;
+let respuestasCorrectas = 0;
 let nombreJugador = "";
 let temporizadorPregunta = null;
 let temporizadorAvance = null;
@@ -112,6 +113,7 @@ function iniciarTrivia() {
     preguntasPartida = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
     indicePreguntaActual = 0;
     puntajeActual = 0;
+    respuestasCorrectas = 0;
 
     // Cambiar de pantalla
     document.getElementById("pantalla-inicio").style.display = "none";
@@ -212,6 +214,7 @@ function evaluarRespuesta(elegida, correcta) {
 
     if (elegida === correcta) {
         puntajeActual += 10;
+        respuestasCorrectas++;
         botones[elegida].style.backgroundColor = "#4CAF50"; // Verde
         mensajeExplicacion = `¡Correcto! ${pregunta.explicacion || "La respuesta elegida fue la correcta."}`;
         reproducirSonido("correcta");
@@ -312,58 +315,33 @@ function finalizarTrivia() {
 
     guardarEnRanking(nombreJugador, puntajeActual);
     actualizarRankingVisual();
+    guardarPuntajeEnRanking(nombreJugador, puntajeActual, respuestasCorrectas);
 }
 
 
-//const URL_WEB_APP = "TU_URL_DE_EXEC_AQUI"; // Tu URL de Apps Script que termina en /exec
-
-function guardarPuntaje(nombreJugador, puntajeTotal, respuestasCorrectas) {
-  const datosJugador = {
-    nombre: nombreJugador,
-    puntaje: puntajeTotal,
-    correctas: respuestasCorrectas
-  };
-
-  fetch(URL_WEB_APP, {
-    method: "POST",
-    // Usamos text/plain para evitar el bloqueo de CORS y que el body llegue completo
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify(datosJugador)
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log("¡Guardado con éxito en el ranking!", data);
-    // Aquí puedes avanzar a la pantalla de felicitaciones o mostrar el ranking
-  })
-  .catch(error => {
-    console.error("Error al guardar:", error);
-  });
-}
-
-
-function guardarPuntajeEnRanking(nombreJugador, puntos, correctasTotales) {
+async function guardarPuntajeEnRanking(nombreJugador, puntos, correctasTotales) {
   const datosJugador = {
     nombre: nombreJugador,
     puntaje: puntos,
     correctas: correctasTotales
   };
+  const estadoGuardado = document.getElementById("estado-guardado");
+  estadoGuardado.textContent = "Enviando el resultado a Google Sheets...";
 
-  fetch(URL_WEB_APP, {
-    method: "POST",
-    mode: "no-cors", // Necesario para llamadas a Apps Script desde páginas locales o externas
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(datosJugador)
-  })
-  .then(() => {
-    console.log("¡Puntaje enviado a la hoja Ranking con éxito!");
-  })
-  .catch(error => {
-    console.error("Error al enviar el puntaje:", error);
-  });
+  try {
+    await fetch(URL_WEB_APP, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(datosJugador)
+    });
+    estadoGuardado.textContent = "Se envió la solicitud de guardado. Google Sheets no permite confirmar desde el navegador si la fila se agregó.";
+  } catch (error) {
+    console.error("No se pudo enviar el puntaje a Google Sheets.", error);
+    estadoGuardado.textContent = "No se pudo enviar el resultado a Google Sheets. Revisá la conexión e intentá nuevamente.";
+  }
 }
 
 
