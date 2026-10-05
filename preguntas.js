@@ -373,7 +373,6 @@ function finalizarTrivia() {
     tiempoTotal,
     categoria,
   );
-  actualizarRankingVisual();
   guardarPuntajeEnRanking(
     nombreJugador,
     puntajeFinal,
