@@ -1,6 +1,6 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
-const SHEET_CSV_URL ="https://script.google.com/macros/s/AKfycbxKRb39YLsVz3Z6zPwD4w9f4eczK-BKLNhyYFf9y1RqeDkNOuZFzIIX4a4C9yRoC0qYEg/exec";
-const URL_WEB_APP="https://script.google.com/macros/s/AKfycbxKRb39YLsVz3Z6zPwD4w9f4eczK-BKLNhyYFf9y1RqeDkNOuZFzIIX4a4C9yRoC0qYEg/exec";
+const SHEET_CSV_URL ="https://script.google.com/macros/s/AKfycbx4Wb3fcysAo-s3YQFixlkt5XrFD1q9eQp-4yLoccdRHIXAtqjWWdU_8qSAYxHThuZsXg/exec";
+const URL_WEB_APP="https://script.google.com/macros/s/AKfycbx4Wb3fcysAo-s3YQFixlkt5XrFD1q9eQp-4yLoccdRHIXAtqjWWdU_8qSAYxHThuZsXg/exec";
 //https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
 // Preguntas de respaldo (Offline / Garantizadas)
