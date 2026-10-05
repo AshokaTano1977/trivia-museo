@@ -33,8 +33,10 @@ let temporizadorPregunta = null;
 let temporizadorAvance = null;
 let preguntaRespondida = false;
 let contextoAudio = null;
+let inicioPregunta = null;
+let tiempoTotalRespuesta = 0;
 const TIEMPO_POR_PREGUNTA = 15;
-const TIEMPO_EXPLICACION = 6000;
+const TIEMPO_EXPLICACION = 5000;
 
 // Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
@@ -114,6 +116,7 @@ function iniciarTrivia() {
     indicePreguntaActual = 0;
     puntajeActual = 0;
     respuestasCorrectas = 0;
+    tiempoTotalRespuesta = 0;
 
     // Cambiar de pantalla
     document.getElementById("pantalla-inicio").style.display = "none";
@@ -172,6 +175,7 @@ function iniciarTemporizador() {
     const barraTiempo = document.getElementById("barra-tiempo");
     const contenedorBarra = barraTiempo.parentElement;
     const inicio = performance.now();
+    inicioPregunta = inicio;
 
     barraTiempo.style.width = "100%";
     document.getElementById("tiempo-restante").textContent = TIEMPO_POR_PREGUNTA;
@@ -202,10 +206,23 @@ function mostrarExplicacion(mensaje) {
     explicacion.style.display = "block";
 }
 
+function registrarTiempoRespuesta() {
+    if (inicioPregunta === null) return 0;
+
+    const tiempoTranscurrido = Math.min(
+        TIEMPO_POR_PREGUNTA,
+        Math.max(0, (performance.now() - inicioPregunta) / 1000)
+    );
+    tiempoTotalRespuesta += tiempoTranscurrido;
+    inicioPregunta = null;
+    return tiempoTranscurrido;
+}
+
 function evaluarRespuesta(elegida, correcta) {
     if (preguntaRespondida) return;
     preguntaRespondida = true;
     clearInterval(temporizadorPregunta);
+    const tiempoRespuesta = registrarTiempoRespuesta();
     const botones = document.querySelectorAll(".btn-opcion");
     botones.forEach(b => b.disabled = true); // Desactivar clics múltiples
 
@@ -213,10 +230,13 @@ function evaluarRespuesta(elegida, correcta) {
     let mensajeExplicacion = "";
 
     if (elegida === correcta) {
-        puntajeActual += 10;
+        const puntosMaximosPregunta = 100 / preguntasPartida.length;
+        const bonusRapidez = puntosMaximosPregunta * 0.5 *
+            (1 - tiempoRespuesta / TIEMPO_POR_PREGUNTA);
+        puntajeActual += puntosMaximosPregunta * 0.5 + bonusRapidez;
         respuestasCorrectas++;
         botones[elegida].style.backgroundColor = "#4CAF50"; // Verde
-        mensajeExplicacion = `¡Correcto! ${pregunta.explicacion || "La respuesta elegida fue la correcta."}`;
+        mensajeExplicacion = `¡Correcto! Sumaste ${Math.round(puntosMaximosPregunta * 0.5 + bonusRapidez)} puntos. ${pregunta.explicacion || "La respuesta elegida fue la correcta."}`;
         reproducirSonido("correcta");
     } else {
         botones[elegida].style.backgroundColor = "#f44336"; // Rojo
@@ -225,7 +245,7 @@ function evaluarRespuesta(elegida, correcta) {
         reproducirSonido("incorrecta");
     }
 
-    document.getElementById("info-puntaje").textContent = `Puntaje: ${puntajeActual}`;
+    document.getElementById("info-puntaje").textContent = `Puntaje: ${Math.round(puntajeActual)}`;
     mostrarExplicacion(mensajeExplicacion);
 
     temporizadorAvance = setTimeout(() => {
@@ -237,6 +257,7 @@ function evaluarRespuesta(elegida, correcta) {
 function tiempoAgotado() {
     if (preguntaRespondida) return;
     preguntaRespondida = true;
+    registrarTiempoRespuesta();
     reproducirSonido("tiempoAgotado");
 
     const pregunta = preguntasPartida[indicePreguntaActual];
@@ -311,19 +332,37 @@ function finalizarTrivia() {
     document.getElementById("pantalla-juego").style.display = "none";
     document.getElementById("pantalla-final").style.display = "block";
 
-    document.getElementById("resultado-final").textContent = `¡Excelente trabajo, ${nombreJugador}! Tu puntaje final es de ${puntajeActual} puntos.`;
+    const puntajeFinal = Math.min(100, Math.round(puntajeActual));
+    const totalPreguntas = preguntasPartida.length;
+    const porcentaje = Math.round((respuestasCorrectas / totalPreguntas) * 100);
+    const tiempoTotal = Math.round(tiempoTotalRespuesta * 10) / 10;
+    const categoria = obtenerCategoria(puntajeFinal);
 
-    guardarEnRanking(nombreJugador, puntajeActual);
+    document.getElementById("resultado-final").textContent =
+        `¡Excelente trabajo, ${nombreJugador}! Tu puntaje final es de ${puntajeFinal} puntos.`;
+    document.getElementById("resultado-categoria").textContent =
+        `${categoria} · ${porcentaje}% de respuestas correctas · ${tiempoTotal} segundos`;
+
+    guardarEnRanking(nombreJugador, puntajeFinal, porcentaje, tiempoTotal, categoria);
     actualizarRankingVisual();
-    guardarPuntajeEnRanking(nombreJugador, puntajeActual, respuestasCorrectas);
+    guardarPuntajeEnRanking(nombreJugador, puntajeFinal, respuestasCorrectas, totalPreguntas, porcentaje, tiempoTotal);
 }
 
+function obtenerCategoria(puntos) {
+    if (puntos <= 50) return "Explorador novato";
+    if (puntos < 80) return "Explorador avanzado";
+    return "Maestro explorador";
+}
 
-async function guardarPuntajeEnRanking(nombreJugador, puntos, correctasTotales) {
+async function guardarPuntajeEnRanking(nombreJugador, puntos, correctasTotales, totalPreguntas, porcentaje, tiempo) {
   const datosJugador = {
     nombre: nombreJugador,
     puntaje: puntos,
-    correctas: correctasTotales
+    total: puntos,
+    porcentaje,
+    Tiempo: tiempo,
+    correctas: correctasTotales,
+    totalPreguntas
   };
   const estadoGuardado = document.getElementById("estado-guardado");
   estadoGuardado.textContent = "Enviando el resultado a Google Sheets...";
@@ -345,10 +384,17 @@ async function guardarPuntajeEnRanking(nombreJugador, puntos, correctasTotales) 
 }
 
 
-function guardarEnRanking(nombre, puntos) {
-    let ranking = JSON.parse(localStorage.getItem("trivia_ranking_uba")) || [];    
-    ranking.push({ fecha: new Date().toLocaleDateString(),nombre, puntos });
-    ranking.sort((a, b) => b.puntos - a.puntos);
+function guardarEnRanking(nombre, puntos, porcentaje, tiempo, categoria) {
+    let ranking = JSON.parse(localStorage.getItem("trivia_ranking_uba")) || [];
+    ranking.push({ fecha: new Date().toLocaleDateString(), nombre, puntos, porcentaje, tiempo, categoria });
+    ranking.sort((a, b) => {
+        const diferenciaPuntaje = b.puntos - a.puntos;
+        if (diferenciaPuntaje !== 0) return diferenciaPuntaje;
+        if (Number.isFinite(a.tiempo) && Number.isFinite(b.tiempo)) {
+            return a.tiempo - b.tiempo;
+        }
+        return 0;
+    });
     ranking = ranking.slice(0, 5); // Top 5
     localStorage.setItem("trivia_ranking_uba", JSON.stringify(ranking));
 }
@@ -365,7 +411,11 @@ function actualizarRankingVisual() {
     lista.innerHTML = "";
     ranking.forEach((item, index) => {
         let li = document.createElement("li");
-        li.textContent = `${index + 1}. ${item.nombre} - ${item.puntos} pts`;
+        const categoria = item.categoria || obtenerCategoria(item.puntos);
+        const detalle = Number.isFinite(item.porcentaje)
+            ? ` · ${item.porcentaje}% · ${item.tiempo} s`
+            : "";
+        li.textContent = `${item.nombre} - ${item.puntos} pts · ${categoria}${detalle}`;
         lista.appendChild(li);
     });
 }

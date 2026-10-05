@@ -16,6 +16,13 @@ MEJORAS INCLUIDAS
 8. Animaciones.
 9. Explicación después de cada respuesta.
 10. Preguntas separadas en preguntas.js.
+11. Puntaje con bonificación por rapidez y ranking local de los 5 mejores.
+
+PUNTAJE Y GOOGLE SHEETS
+- El puntaje final va de 0 a 100. Cada respuesta correcta suma la mitad de sus puntos posibles y puede ganar la otra mitad como bonificación por rapidez.
+- Las categorías son: Explorador novato (0-50), Explorador avanzado (51-79) y Maestro explorador (80-100).
+- El envío a Google Sheets incluye "total" (puntaje), "porcentaje" (respuestas correctas) y "Tiempo" (segundos empleados respondiendo), además de "nombre", "puntaje" y "correctas" para conservar los datos existentes.
+- El ranking que aparece al final se guarda en el navegador del jugador. Para que Google Sheets guarde las nuevas columnas, la Web App debe leer esos campos del JSON recibido y agregarlos a las columnas correspondientes.
 
 IMAGENES
 Para agregar fotos locales:
