@@ -1,8 +1,8 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
 const SHEET_CSV_URL =
   "https://script.google.com/macros/s/AKfycbyMRQPr1RDTOrU1zZ_cRTgW5XAp98zNEgAcMEeCLAWfNxrghokrHyks2-PbD1_AW7F1hw/exec";
-//const URL_WEB_APP =
-  //"https://script.google.com/macros/s/AKfycbx4Wb3fcysAo-s3YQFixlkt5XrFD1q9eQp-4yLoccdRHIXAtqjWWdU_8qSAYxHThuZsXg/exec";
+const URL_WEB_APP =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 //https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
 // Preguntas de respaldo (Offline / Garantizadas)
@@ -62,7 +62,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 async function sincronizarGoogleSheets() {
   try {
-    const respuesta = await fetch(SHEET_CSV_URL);
+    const respuesta = await fetch(URL_WEB_APP);
     if (!respuesta.ok) throw new Error("Error de red");
     const datosCSV = await respuesta.text();
     const preguntasRemotas = parsearCSV(datosCSV);
