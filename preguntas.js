@@ -133,6 +133,12 @@ function iniciarTrivia() {
   mostrarPreguntaActual();
 }
 
+function formatearPuntaje(valor) {
+  return Number(valor)
+    .toFixed(3)
+    .replace(/\.0+$|(?<=\.\d)0+$/g, "");
+}
+
 function mostrarPreguntaActual() {
   clearInterval(temporizadorPregunta);
   clearTimeout(temporizadorAvance);
@@ -147,7 +153,7 @@ function mostrarPreguntaActual() {
   document.getElementById("explicacion-texto").style.display = "none";
   const q = preguntasPartida[indicePreguntaActual];
   document.getElementById("info-puntaje").textContent =
-    `Puntaje: ${puntajeActual}`;
+    `Puntaje: ${formatearPuntaje(puntajeActual)}`;
   document.getElementById("texto-pregunta").textContent =
     `${indicePreguntaActual + 1}. ${q.pregunta}`;
 
@@ -362,8 +368,10 @@ function finalizarTrivia() {
   const categoria = obtenerCategoria(puntajeFinal);
 
   document.getElementById("resultado-final").textContent =
-    `¡Excelente trabajo, ${nombreJugador}! Tu puntaje final es de ${puntajeFinal} puntos.`;
+    `¡Excelente trabajo, ${nombreJugador}!`;
   document.getElementById("resultado-categoria").textContent =
+    `Tu puntaje final es de ${puntajeFinal} puntos.`;
+  document.getElementById("resultado-detalle").textContent =
     `${categoria} · ${porcentaje}% de respuestas correctas · ${tiempoTotal} segundos`;
 
   guardarEnRanking(
@@ -418,8 +426,7 @@ async function guardarPuntajeEnRanking(
       },
       body: JSON.stringify(datosJugador),
     });
-    estadoGuardado.textContent =
-      "Se envió la solicitud de guardado. Google Sheets no permite confirmar desde el navegador si la fila se agregó.";
+    estadoGuardado.textContent = "Resultado enviado.";
   } catch (error) {
     console.error("No se pudo enviar el puntaje a Google Sheets.", error);
     estadoGuardado.textContent =
