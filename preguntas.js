@@ -39,7 +39,7 @@ let contextoAudio = null;
 let inicioPregunta = null;
 let tiempoTotalRespuesta = 0;
 const TIEMPO_POR_PREGUNTA = 15;
-const TIEMPO_EXPLICACION = 5000;
+const TIEMPO_EXPLICACION = 2000;
 
 // Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
