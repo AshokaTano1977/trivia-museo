@@ -731,6 +731,17 @@ function guardarTiempoEnRanking(nombre, tiempo, puntos) {
     fecha: new Date().toLocaleDateString(),
   });
   ranking.sort((a, b) => a.tiempo - b.tiempo || b.puntos - a.puntos);
+
+  const nombresVistos = new Set();
+  ranking = ranking.filter((partida) => {
+    const clave = normalizarNombreClave(partida.nombre);
+    if (nombresVistos.has(clave)) {
+      return false;
+    }
+    nombresVistos.add(clave);
+    return true;
+  });
+
   localStorage.setItem(
     "API_Trivia_Ranking_Tiempos",
     JSON.stringify(ranking.slice(0, 10)),
