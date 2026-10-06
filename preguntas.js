@@ -363,7 +363,9 @@ function finalizarTrivia() {
 
   const puntajeFinal = Math.min(100, Math.round(puntajeActual));
   const totalPreguntas = preguntasPartida.length;
-  const porcentaje = Math.round((respuestasCorrectas / totalPreguntas) * 100);
+  const porcentaje = totalPreguntas > 0
+    ? Math.round((respuestasCorrectas / totalPreguntas) * 100)
+    : 0;
   const tiempoTotal = Math.round(tiempoTotalRespuesta * 10) / 10;
   const categoria = obtenerCategoria(puntajeFinal);
 
@@ -401,20 +403,18 @@ async function guardarPuntajeEnRanking(
   nombreJugador,
   puntos,
   correctasTotales,
-  totalPreguntas,
+  cantidadPreguntas,
   porcentaje,
   tiempo,
 ) {
   const datosJugador = {
     nombre: nombreJugador,
     puntaje: puntos,
+    correctas: correctasTotales,
     total: puntos,
+    Cantidad_preguntas: cantidadPreguntas,
     porcentaje,
     tiempo,
-    Tiempo: tiempo,
-    correctas: correctasTotales,
-    Cantidad_preguntas: totalPreguntas,
-    totalPreguntas,
   };
   const estadoGuardado = document.getElementById("estado-guardado");
   estadoGuardado.textContent = "Enviando el resultado a Google Sheets...";
