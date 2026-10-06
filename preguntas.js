@@ -137,19 +137,30 @@ window.addEventListener("DOMContentLoaded", () => {
     iniciarTrivia();
   });
 
-  document
-    .getElementById("btn-ver-ranking-tiempos")
-    .addEventListener("click", () => {
+  const btnVerRankingInicio = document.getElementById(
+    "btn-ver-ranking-tiempos",
+  );
+  if (btnVerRankingInicio) {
+    btnVerRankingInicio.addEventListener("click", () => {
       mostrarRankingTiempos("pantalla-inicio");
     });
-  document
-    .getElementById("btn-ver-ranking-tiempos-final")
-    .addEventListener("click", () => {
+  }
+
+  const btnVerRankingFinal = document.getElementById(
+    "btn-ver-ranking-tiempos-final",
+  );
+  if (btnVerRankingFinal) {
+    btnVerRankingFinal.addEventListener("click", () => {
       mostrarRankingTiempos("pantalla-final");
     });
-  document
-    .getElementById("btn-volver-ranking-tiempos")
-    .addEventListener("click", volverDesdeRankingTiempos);
+  }
+
+  const btnVolverRanking = document.getElementById(
+    "btn-volver-ranking-tiempos",
+  );
+  if (btnVolverRanking) {
+    btnVolverRanking.addEventListener("click", volverDesdeRankingTiempos);
+  }
 });
 
 function normalizarTextoParaFiltro(texto) {
