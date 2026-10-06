@@ -159,7 +159,10 @@ function mostrarPreguntaActual() {
 
   // Manejo de imagen JPG
   const contenedorImg = document.getElementById("contenedor-imagen");
-  contenedorImg.innerHTML = "";
+  const imagenAnterior = contenedorImg.querySelector("img");
+  if (imagenAnterior) imagenAnterior.remove();
+  contenedorImg.classList.remove("toast-sin-imagen");
+  contenedorImg.classList.toggle("con-imagen", Boolean(q.imagen));
   if (q.imagen) {
     let img = document.createElement("img");
     img.src = q.imagen;
@@ -227,8 +230,12 @@ function iniciarTemporizador() {
 
 function mostrarExplicacion(mensaje) {
   const explicacion = document.getElementById("explicacion-texto");
+  const contenedorImg = document.getElementById("contenedor-imagen");
   explicacion.textContent = mensaje;
   explicacion.style.display = "block";
+  if (!contenedorImg.classList.contains("con-imagen")) {
+    contenedorImg.classList.add("toast-sin-imagen");
+  }
 }
 
 function registrarTiempoRespuesta() {
@@ -412,7 +419,9 @@ async function guardarPuntajeEnRanking(
     puntaje: puntos,
     correctas: correctasTotales,
     total: puntos,
+    cantidad_preguntas: cantidadPreguntas,
     Cantidad_preguntas: cantidadPreguntas,
+    totalPreguntas: cantidadPreguntas,
     porcentaje,
     tiempo,
   };

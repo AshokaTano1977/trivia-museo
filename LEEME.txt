@@ -21,7 +21,7 @@ MEJORAS INCLUIDAS
 PUNTAJE Y GOOGLE SHEETS
 - El puntaje final va de 0 a 100. Cada respuesta correcta suma la mitad de sus puntos posibles y puede ganar la otra mitad como bonificación por rapidez.
 - Las categorías son: Explorador novato (0-50), Explorador avanzado (51-79) y Maestro explorador (80-100).
-- El envío a Google Sheets incluye "nombre", "puntaje", "correctas" y "total" (puntaje), además de "Cantidad_preguntas", "porcentaje" y "tiempo" (segundos empleados respondiendo). Se conservan también los nombres anteriores "totalPreguntas" y "Tiempo" por compatibilidad.
+- El envío a Google Sheets incluye "nombre", "puntaje", "correctas" y "total" (puntaje), además de "cantidad_preguntas" (también "Cantidad_preguntas" y "totalPreguntas" por compatibilidad), "porcentaje" y "tiempo" (segundos empleados respondiendo).
 - El ranking que aparece al final se guarda en el navegador del jugador. Para que Google Sheets guarde las nuevas columnas, la Web App debe leer esos campos del JSON recibido y agregarlos a las columnas correspondientes.
 
 IMAGENES
