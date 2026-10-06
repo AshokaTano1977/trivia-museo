@@ -1,8 +1,8 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
 const SHEET_CSV_URL =
   "https://script.google.com/macros/s/AKfycbx4Wb3fcysAo-s3YQFixlkt5XrFD1q9eQp-4yLoccdRHIXAtqjWWdU_8qSAYxHThuZsXg/exec";
-const URL_WEB_APP =
-  "https://script.google.com/macros/s/AKfycbx4Wb3fcysAo-s3YQFixlkt5XrFD1q9eQp-4yLoccdRHIXAtqjWWdU_8qSAYxHThuZsXg/exec";
+//const URL_WEB_APP =
+  //"https://script.google.com/macros/s/AKfycbx4Wb3fcysAo-s3YQFixlkt5XrFD1q9eQp-4yLoccdRHIXAtqjWWdU_8qSAYxHThuZsXg/exec";
 //https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
 // Preguntas de respaldo (Offline / Garantizadas)
@@ -39,7 +39,7 @@ let contextoAudio = null;
 let inicioPregunta = null;
 let tiempoTotalRespuesta = 0;
 const TIEMPO_POR_PREGUNTA = 15;
-const TIEMPO_EXPLICACION = 4000;
+const TIEMPO_EXPLICACION = 3000;
 
 // Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
@@ -418,7 +418,7 @@ async function guardarPuntajeEnRanking(
   estadoGuardado.textContent = "Enviando el resultado a Google Sheets...";
 
   try {
-    await fetch(URL_WEB_APP, {
+    await fetch(SHEET_CSV_URL , {
       method: "POST",
       mode: "no-cors",
       headers: {
