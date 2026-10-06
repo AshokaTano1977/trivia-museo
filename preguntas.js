@@ -3,7 +3,6 @@ const SHEET_CSV_URL =
   "https://script.google.com/macros/s/AKfycbyMRQPr1RDTOrU1zZ_cRTgW5XAp98zNEgAcMEeCLAWfNxrghokrHyks2-PbD1_AW7F1hw/exec";
 const URL_WEB_APP =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
-//https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
 // Preguntas de respaldo (Offline / Garantizadas)
 let preguntasRespaldo = [
@@ -42,27 +41,107 @@ let pantallaAnteriorRankingTiempos = "pantalla-inicio";
 const TIEMPO_POR_PREGUNTA = 15;
 const TIEMPO_EXPLICACION = 4000;
 
+// Reglas para el nombre del participante
+const NOMBRE_MINIMO = 2;
+const NOMBRE_MAXIMO = 15;
+const MAX_APARICIONES_MISMO_NOMBRE_RANKING = 2;
+const PALABRAS_PROHIBIDAS = [
+  "puta",
+  "puto",
+  "putas",
+  "putos",
+  "mierda",
+  "mierdas",
+  "pelotudo",
+  "pelotuda",
+  "pelotudos",
+  "pelotudas",
+  "boludo",
+  "boluda",
+  "boludos",
+  "boludas",
+  "culo",
+  "culos",
+  "concha",
+  "conchuda",
+  "conchudo",
+  "pija",
+  "pijas",
+  "pito",
+  "verga",
+  "verg",
+  "cojudo",
+  "cojuda",
+  "cojudos",
+  "cojudas",
+  "forro",
+  "forra",
+  "forros",
+  "forras",
+  "choto",
+  "chota",
+  "chotos",
+  "chotas",
+  "hdp",
+  "hijodeputa",
+  "hijaputa",
+  "cabron",
+  "cabrona",
+  "cabrones",
+  "carajo",
+  "joder",
+  "fuck",
+  "fucking",
+  "shit",
+  "bitch",
+  "asshole",
+  "dick",
+  "pussy",
+];
+
 // Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
   // Intentar actualizar desde Google Sheets en segundo plano
   sincronizarGoogleSheets();
 
-  document.getElementById("btn-comenzar").addEventListener("click", () => {
-    const input = document.getElementById("nombre-jugador");
-    nombreJugador = input.value.trim();
+  const inputNombre = document.getElementById("nombre-jugador");
+  const btnComenzar = document.getElementById("btn-comenzar");
 
-    if (nombreJugador === "") {
-      alert("Por favor, ingresa un nombre válido para continuar.");
-      input.focus();
+  inputNombre.addEventListener("input", () => {
+    limpiarMensajeNombre();
+    // Evita que el contador visual supere el máximo permitido.
+    if (inputNombre.value.length > NOMBRE_MAXIMO) {
+      inputNombre.value = inputNombre.value.slice(0, NOMBRE_MAXIMO);
+    }
+  });
+
+  inputNombre.addEventListener("keydown", (evento) => {
+    if (evento.key === "Enter") {
+      evento.preventDefault();
+      btnComenzar.click();
+    }
+  });
+
+  btnComenzar.addEventListener("click", () => {
+    const validacion = validarNombreJugador(inputNombre.value);
+
+    if (!validacion.valido) {
+      mostrarMensajeNombre(validacion.mensaje, "error");
+      inputNombre.focus();
       return;
     }
 
+    nombreJugador = normalizarNombreVisible(inputNombre.value);
+    idParticipante = generarIdParticipante();
+    limpiarMensajeNombre();
     iniciarTrivia();
   });
 
-  document.getElementById("btn-ver-ranking-tiempos").addEventListener("click", () => {
-    mostrarRankingTiempos("pantalla-inicio");
-  });
+  document
+    .getElementById("btn-ver-ranking-tiempos")
+    .addEventListener("click", () => {
+      mostrarRankingTiempos("pantalla-inicio");
+    });
   document
     .getElementById("btn-ver-ranking-tiempos-final")
     .addEventListener("click", () => {
@@ -72,6 +151,116 @@ window.addEventListener("DOMContentLoaded", () => {
     .getElementById("btn-volver-ranking-tiempos")
     .addEventListener("click", volverDesdeRankingTiempos);
 });
+
+function normalizarTextoParaFiltro(texto) {
+  return texto
+    .toLocaleLowerCase("es")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[@4]/g, "a")
+    .replace(/[3]/g, "e")
+    .replace(/[1!|]/g, "i")
+    .replace(/[0]/g, "o")
+    .replace(/[5$]/g, "s")
+    .replace(/[7]/g, "t")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function normalizarNombreClave(nombre) {
+  return normalizarTextoParaFiltro(nombre);
+}
+
+function normalizarNombreVisible(nombre) {
+  return nombre.trim().replace(/\s+/g, " ").slice(0, NOMBRE_MAXIMO);
+}
+
+function contienePalabraProhibida(nombre) {
+  const originalNormalizado = nombre
+    .toLocaleLowerCase("es")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  const compacto = normalizarTextoParaFiltro(nombre);
+  const palabras = originalNormalizado.split(/[^a-z0-9]+/).filter(Boolean);
+
+  return PALABRAS_PROHIBIDAS.some((prohibida) => {
+    const palabra = normalizarTextoParaFiltro(prohibida);
+    if (!palabra) return false;
+
+    // Coincidencia por palabra completa.
+    if (palabras.includes(palabra)) return true;
+
+    // Detecta variantes sencillas con números/símbolos intercalados.
+    // Solo se aplica a términos de 4 o más caracteres para reducir falsos positivos.
+    return palabra.length >= 4 && compacto.includes(palabra);
+  });
+}
+
+function validarNombreJugador(nombreOriginal) {
+  const nombre = normalizarNombreVisible(nombreOriginal);
+
+  if (nombre.length < NOMBRE_MINIMO) {
+    return {
+      valido: false,
+      mensaje: `El nombre debe tener al menos ${NOMBRE_MINIMO} caracteres.`,
+    };
+  }
+
+  if (nombre.length > NOMBRE_MAXIMO) {
+    return {
+      valido: false,
+      mensaje: `El nombre puede tener como máximo ${NOMBRE_MAXIMO} caracteres.`,
+    };
+  }
+
+  // Permite letras Unicode, espacios, números, punto, guion y apóstrofe.
+  if (!/^[\p{L}\p{N} .'-]+$/u.test(nombre)) {
+    return {
+      valido: false,
+      mensaje: "Usá solamente letras, números, espacios, punto o guion.",
+    };
+  }
+
+  if (!/\p{L}/u.test(nombre)) {
+    return {
+      valido: false,
+      mensaje: "El nombre debe contener al menos una letra.",
+    };
+  }
+
+  if (contienePalabraProhibida(nombre)) {
+    return {
+      valido: false,
+      mensaje: "Ese nombre no está permitido. Probá con otro nombre o apodo.",
+    };
+  }
+
+  return { valido: true, nombre };
+}
+
+function mostrarMensajeNombre(mensaje, tipo = "error") {
+  const elemento = document.getElementById("mensaje-nombre");
+  if (!elemento) return;
+  elemento.textContent = mensaje;
+  elemento.className = `mensaje-nombre ${tipo}`;
+  elemento.style.display = "block";
+}
+
+function limpiarMensajeNombre() {
+  const elemento = document.getElementById("mensaje-nombre");
+  if (!elemento) return;
+  elemento.textContent = "";
+  elemento.className = "mensaje-nombre";
+  elemento.style.display = "none";
+}
+
+function generarIdParticipante() {
+  if (window.crypto && typeof window.crypto.randomUUID === "function") {
+    return window.crypto.randomUUID();
+  }
+
+  return `p-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
 
 async function sincronizarGoogleSheets() {
   try {
@@ -383,9 +572,10 @@ function finalizarTrivia() {
 
   const puntajeFinal = Math.min(100, Math.round(puntajeActual));
   const totalPreguntas = preguntasPartida.length;
-  const porcentaje = totalPreguntas > 0
-    ? Math.round((respuestasCorrectas / totalPreguntas) * 100)
-    : 0;
+  const porcentaje =
+    totalPreguntas > 0
+      ? Math.round((respuestasCorrectas / totalPreguntas) * 100)
+      : 0;
   const tiempoTotal = Math.round(tiempoTotalRespuesta * 10) / 10;
   const categoria = obtenerCategoria(puntajeFinal);
 
@@ -444,7 +634,7 @@ async function guardarPuntajeEnRanking(
   estadoGuardado.textContent = "Enviando el resultado a Google Sheets...";
 
   try {
-    await fetch(SHEET_CSV_URL , {
+    await fetch(SHEET_CSV_URL, {
       method: "POST",
       mode: "no-cors",
       headers: {
@@ -462,14 +652,19 @@ async function guardarPuntajeEnRanking(
 
 function guardarEnRanking(nombre, puntos, porcentaje, tiempo, categoria) {
   let ranking = JSON.parse(localStorage.getItem("API_Trivia_Ranking")) || [];
+  const nombreClave = normalizarNombreClave(nombre);
+
   ranking.push({
+    id: idParticipante || generarIdParticipante(),
     fecha: new Date().toLocaleDateString(),
     nombre,
+    nombreClave,
     puntos,
     porcentaje,
     tiempo,
     categoria,
   });
+
   ranking.sort((a, b) => {
     const diferenciaPuntaje = b.puntos - a.puntos;
     if (diferenciaPuntaje !== 0) return diferenciaPuntaje;
@@ -478,7 +673,16 @@ function guardarEnRanking(nombre, puntos, porcentaje, tiempo, categoria) {
     }
     return 0;
   });
-  ranking = ranking.slice(0, 5); // Top 5
+  // Evita que el mismo nombre ocupe demasiados lugares del Top 5.
+  // No bloquea a dos personas distintas con el mismo nombre.
+  const apariciones = {};
+  ranking = ranking.filter((item) => {
+    const clave = item.nombreClave || normalizarNombreClave(item.nombre);
+    apariciones[clave] = (apariciones[clave] || 0) + 1;
+    return apariciones[clave] <= MAX_APARICIONES_MISMO_NOMBRE_RANKING;
+  });
+
+  ranking = ranking.slice(0, 5);
   localStorage.setItem("API_Trivia_Ranking", JSON.stringify(ranking));
 }
 
@@ -563,5 +767,6 @@ function mostrarRankingTiempos(pantallaOrigen) {
 
 function volverDesdeRankingTiempos() {
   document.getElementById("pantalla-ranking-tiempos").style.display = "none";
-  document.getElementById(pantallaAnteriorRankingTiempos).style.display = "block";
+  document.getElementById(pantallaAnteriorRankingTiempos).style.display =
+    "block";
 }

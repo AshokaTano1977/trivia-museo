@@ -24,10 +24,22 @@
         type="text"
         id="nombre-jugador"
         placeholder="Ej: Juan M."
-        maxlength="20"
+        maxlength="15"
+        minlength="2"
+        autocomplete="nickname"
+        aria-describedby="ayuda-nombre mensaje-nombre"
         required
       />
-      <br /><br />
+      <p id="ayuda-nombre" class="ayuda-nombre">
+        Máximo 15 caracteres · Podés usar tu nombre o un apodo.
+      </p>
+      <p
+        id="mensaje-nombre"
+        class="mensaje-nombre"
+        role="alert"
+        aria-live="polite"
+      ></p>
+      <br />
       <button id="btn-comenzar">¡Comenzar a Jugar!</button>
       <button class="btn-secundario" id="btn-ver-ranking-tiempos">
         Ver los 10 mejores tiempos
@@ -87,7 +99,9 @@
     <!-- Pantalla 4: Ranking de tiempos -->
     <div id="pantalla-ranking-tiempos" class="pantalla" style="display: none">
       <h2>⏱️ Los 10 mejores tiempos</h2>
-      <p class="detalle-juego">Partidas más rápidas guardadas en este dispositivo.</p>
+      <p class="detalle-juego">
+        Partidas más rápidas guardadas en este dispositivo.
+      </p>
       <ol id="lista-ranking-tiempos"></ol>
       <button class="btn-secundario" id="btn-volver-ranking-tiempos">
         Volver
