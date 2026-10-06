@@ -38,6 +38,7 @@ let preguntaRespondida = false;
 let contextoAudio = null;
 let inicioPregunta = null;
 let tiempoTotalRespuesta = 0;
+let pantallaAnteriorRankingTiempos = "pantalla-inicio";
 const TIEMPO_POR_PREGUNTA = 15;
 const TIEMPO_EXPLICACION = 4000;
 
@@ -58,6 +59,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
     iniciarTrivia();
   });
+
+  document.getElementById("btn-ver-ranking-tiempos").addEventListener("click", () => {
+    mostrarRankingTiempos("pantalla-inicio");
+  });
+  document
+    .getElementById("btn-ver-ranking-tiempos-final")
+    .addEventListener("click", () => {
+      mostrarRankingTiempos("pantalla-final");
+    });
+  document
+    .getElementById("btn-volver-ranking-tiempos")
+    .addEventListener("click", volverDesdeRankingTiempos);
 });
 
 async function sincronizarGoogleSheets() {
@@ -390,6 +403,8 @@ function finalizarTrivia() {
     tiempoTotal,
     categoria,
   );
+  guardarTiempoEnRanking(nombreJugador, tiempoTotal, puntajeFinal);
+  actualizarRankingTiemposVisual();
   guardarPuntajeEnRanking(
     nombreJugador,
     puntajeFinal,
@@ -486,4 +501,67 @@ function actualizarRankingVisual() {
     li.textContent = `${item.nombre} - ${item.puntos} pts · ${categoria}${detalle}`;
     lista.appendChild(li);
   });
+}
+
+function guardarTiempoEnRanking(nombre, tiempo, puntos) {
+  let ranking = JSON.parse(
+    localStorage.getItem("API_Trivia_Ranking_Tiempos") || "[]",
+  );
+  if (ranking.length === 0) {
+    const rankingAnterior = JSON.parse(
+      localStorage.getItem("API_Trivia_Ranking") || "[]",
+    );
+    ranking = rankingAnterior
+      .filter((partida) => Number.isFinite(partida.tiempo))
+      .map((partida) => ({
+        nombre: partida.nombre,
+        tiempo: partida.tiempo,
+        puntos: partida.puntos,
+        fecha: partida.fecha,
+      }));
+  }
+  ranking.push({
+    nombre,
+    tiempo,
+    puntos,
+    fecha: new Date().toLocaleDateString(),
+  });
+  ranking.sort((a, b) => a.tiempo - b.tiempo || b.puntos - a.puntos);
+  localStorage.setItem(
+    "API_Trivia_Ranking_Tiempos",
+    JSON.stringify(ranking.slice(0, 10)),
+  );
+}
+
+function actualizarRankingTiemposVisual() {
+  const lista = document.getElementById("lista-ranking-tiempos");
+  const ranking = JSON.parse(
+    localStorage.getItem("API_Trivia_Ranking_Tiempos") || "[]",
+  );
+  lista.innerHTML = "";
+
+  if (ranking.length === 0) {
+    const item = document.createElement("li");
+    item.textContent = "Todavía no hay tiempos registrados.";
+    lista.appendChild(item);
+    return;
+  }
+
+  ranking.forEach((partida) => {
+    const item = document.createElement("li");
+    item.textContent = `${partida.nombre} — ${partida.tiempo} s · ${partida.puntos} pts`;
+    lista.appendChild(item);
+  });
+}
+
+function mostrarRankingTiempos(pantallaOrigen) {
+  pantallaAnteriorRankingTiempos = pantallaOrigen;
+  document.getElementById(pantallaOrigen).style.display = "none";
+  document.getElementById("pantalla-ranking-tiempos").style.display = "block";
+  actualizarRankingTiemposVisual();
+}
+
+function volverDesdeRankingTiempos() {
+  document.getElementById("pantalla-ranking-tiempos").style.display = "none";
+  document.getElementById(pantallaAnteriorRankingTiempos).style.display = "block";
 }

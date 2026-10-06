@@ -29,6 +29,9 @@
       />
       <br /><br />
       <button id="btn-comenzar">¡Comenzar a Jugar!</button>
+      <button class="btn-secundario" id="btn-ver-ranking-tiempos">
+        Ver los 10 mejores tiempos
+      </button>
     </div>
 
     <!-- Pantalla 2: El Juego (Oculto al inicio) -->
@@ -76,6 +79,19 @@
       <p id="resultado-categoria"></p>
       <p id="resultado-detalle"></p>
       <p id="estado-guardado" role="status" aria-live="polite"></p>
+      <button class="btn-secundario" id="btn-ver-ranking-tiempos-final">
+        Ver los 10 mejores tiempos
+      </button>
+    </div>
+
+    <!-- Pantalla 4: Ranking de tiempos -->
+    <div id="pantalla-ranking-tiempos" class="pantalla" style="display: none">
+      <h2>⏱️ Los 10 mejores tiempos</h2>
+      <p class="detalle-juego">Partidas más rápidas guardadas en este dispositivo.</p>
+      <ol id="lista-ranking-tiempos"></ol>
+      <button class="btn-secundario" id="btn-volver-ranking-tiempos">
+        Volver
+      </button>
     </div>
 
     <script src="preguntas.js"></script>

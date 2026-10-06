@@ -96,6 +96,30 @@ button {
   background: var(--azul-secundario);
 }
 
+.btn-secundario {
+  display: block;
+  width: min(100%, 520px);
+  margin: 14px auto;
+  padding: 14px 18px;
+  background: var(--gris);
+  color: var(--azul);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.btn-secundario:hover {
+  background: #cbd5e1;
+}
+
+#lista-ranking-tiempos {
+  width: min(100%, 600px);
+  margin: 24px auto;
+  padding-left: 42px;
+  text-align: left;
+  font-size: clamp(17px, 4vw, 21px);
+  line-height: 1.8;
+}
+
 #contenedor-ranking {
   width: min(100%, 520px);
   margin: 30px auto 0;
