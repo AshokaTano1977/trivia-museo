@@ -1,6 +1,6 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
-const SHEET_CSV_URL =
-  "https://script.google.com/macros/s/AKfycbyMRQPr1RDTOrU1zZ_cRTgW5XAp98zNEgAcMEeCLAWfNxrghokrHyks2-PbD1_AW7F1hw/exec";
+const SHEET_CSV_URL ="https://script.google.com/macros/s/AKfycbyitZZk-9qxOtuIWrkxhPbYoeJ8KRyt0oORXOXFSZ6-yqd1OxTEVDsT5s77vLRo_OWgGA/exec";
+//  "https://script.google.com/macros/s/AKfycbyMRQPr1RDTOrU1zZ_cRTgW5XAp98zNEgAcMEeCLAWfNxrghokrHyks2-PbD1_AW7F1hw/exec";
 const URL_WEB_APP =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
@@ -31,6 +31,7 @@ let indicePreguntaActual = 0;
 let puntajeActual = 0;
 let respuestasCorrectas = 0;
 let nombreJugador = "";
+let idParticipante = "";
 let temporizadorPregunta = null;
 let temporizadorAvance = null;
 let preguntaRespondida = false;
@@ -46,57 +47,14 @@ const NOMBRE_MINIMO = 2;
 const NOMBRE_MAXIMO = 15;
 const MAX_APARICIONES_MISMO_NOMBRE_RANKING = 2;
 const PALABRAS_PROHIBIDAS = [
-  "puta",
-  "puto",
-  "putas",
-  "putos",
-  "mierda",
-  "mierdas",
-  "pelotudo",
-  "pelotuda",
-  "pelotudos",
-  "pelotudas",
-  "boludo",
-  "boluda",
-  "boludos",
-  "boludas",
-  "culo",
-  "culos",
-  "concha",
-  "conchuda",
-  "conchudo",
-  "pija",
-  "pijas",
-  "pito",
-  "verga",
-  "verg",
-  "cojudo",
-  "cojuda",
-  "cojudos",
-  "cojudas",
-  "forro",
-  "forra",
-  "forros",
-  "forras",
-  "choto",
-  "chota",
-  "chotos",
-  "chotas",
-  "hdp",
-  "hijodeputa",
-  "hijaputa",
-  "cabron",
-  "cabrona",
-  "cabrones",
-  "carajo",
-  "joder",
-  "fuck",
-  "fucking",
-  "shit",
-  "bitch",
-  "asshole",
-  "dick",
-  "pussy",
+  "puta", "puto", "putas", "putos", "mierda", "mierdas", "pelotudo",
+  "pelotuda", "pelotudos", "pelotudas", "boludo", "boluda", "boludos",
+  "boludas", "culo", "culos", "concha", "conchuda", "conchudo",
+  "pija", "pijas", "pito", "verga", "verg", "cojudo", "cojuda",
+  "cojudos", "cojudas", "forro", "forra", "forros", "forras",
+  "choto", "chota", "chotos", "chotas", "hdp", "hijodeputa",
+  "hijaputa", "cabron", "cabrona", "cabrones", "carajo", "joder",
+  "fuck", "fucking", "shit", "bitch", "asshole", "dick", "pussy"
 ];
 
 // Inicialización al cargar la página
@@ -137,30 +95,17 @@ window.addEventListener("DOMContentLoaded", () => {
     iniciarTrivia();
   });
 
-  const btnVerRankingInicio = document.getElementById(
-    "btn-ver-ranking-tiempos",
-  );
-  if (btnVerRankingInicio) {
-    btnVerRankingInicio.addEventListener("click", () => {
-      mostrarRankingTiempos("pantalla-inicio");
-    });
-  }
-
-  const btnVerRankingFinal = document.getElementById(
-    "btn-ver-ranking-tiempos-final",
-  );
-  if (btnVerRankingFinal) {
-    btnVerRankingFinal.addEventListener("click", () => {
+  document.getElementById("btn-ver-ranking-tiempos").addEventListener("click", () => {
+    mostrarRankingTiempos("pantalla-inicio");
+  });
+  document
+    .getElementById("btn-ver-ranking-tiempos-final")
+    .addEventListener("click", () => {
       mostrarRankingTiempos("pantalla-final");
     });
-  }
-
-  const btnVolverRanking = document.getElementById(
-    "btn-volver-ranking-tiempos",
-  );
-  if (btnVolverRanking) {
-    btnVolverRanking.addEventListener("click", volverDesdeRankingTiempos);
-  }
+  document
+    .getElementById("btn-volver-ranking-tiempos")
+    .addEventListener("click", volverDesdeRankingTiempos);
 });
 
 function normalizarTextoParaFiltro(texto) {
@@ -583,10 +528,9 @@ function finalizarTrivia() {
 
   const puntajeFinal = Math.min(100, Math.round(puntajeActual));
   const totalPreguntas = preguntasPartida.length;
-  const porcentaje =
-    totalPreguntas > 0
-      ? Math.round((respuestasCorrectas / totalPreguntas) * 100)
-      : 0;
+  const porcentaje = totalPreguntas > 0
+    ? Math.round((respuestasCorrectas / totalPreguntas) * 100)
+    : 0;
   const tiempoTotal = Math.round(tiempoTotalRespuesta * 10) / 10;
   const categoria = obtenerCategoria(puntajeFinal);
 
@@ -631,6 +575,7 @@ async function guardarPuntajeEnRanking(
   tiempo,
 ) {
   const datosJugador = {
+    participante_id: idParticipante,
     nombre: nombreJugador,
     puntaje: puntos,
     correctas: correctasTotales,
@@ -645,7 +590,7 @@ async function guardarPuntajeEnRanking(
   estadoGuardado.textContent = "Enviando el resultado a Google Sheets...";
 
   try {
-    await fetch(SHEET_CSV_URL, {
+    await fetch(SHEET_CSV_URL , {
       method: "POST",
       mode: "no-cors",
       headers: {
@@ -684,6 +629,7 @@ function guardarEnRanking(nombre, puntos, porcentaje, tiempo, categoria) {
     }
     return 0;
   });
+
   // Evita que el mismo nombre ocupe demasiados lugares del Top 5.
   // No bloquea a dos personas distintas con el mismo nombre.
   const apariciones = {};
@@ -736,21 +682,20 @@ function guardarTiempoEnRanking(nombre, tiempo, puntos) {
       }));
   }
   ranking.push({
+    id: idParticipante || generarIdParticipante(),
     nombre,
+    nombreClave: normalizarNombreClave(nombre),
     tiempo,
     puntos,
     fecha: new Date().toLocaleDateString(),
   });
   ranking.sort((a, b) => a.tiempo - b.tiempo || b.puntos - a.puntos);
 
-  const nombresVistos = new Set();
-  ranking = ranking.filter((partida) => {
-    const clave = normalizarNombreClave(partida.nombre);
-    if (nombresVistos.has(clave)) {
-      return false;
-    }
-    nombresVistos.add(clave);
-    return true;
+  const apariciones = {};
+  ranking = ranking.filter((item) => {
+    const clave = item.nombreClave || normalizarNombreClave(item.nombre);
+    apariciones[clave] = (apariciones[clave] || 0) + 1;
+    return apariciones[clave] <= MAX_APARICIONES_MISMO_NOMBRE_RANKING;
   });
 
   localStorage.setItem(
@@ -759,25 +704,51 @@ function guardarTiempoEnRanking(nombre, tiempo, puntos) {
   );
 }
 
-function actualizarRankingTiemposVisual() {
+async function actualizarRankingTiemposVisual() {
   const lista = document.getElementById("lista-ranking-tiempos");
-  const ranking = JSON.parse(
-    localStorage.getItem("API_Trivia_Ranking_Tiempos") || "[]",
-  );
+  const estado = document.getElementById("estado-ranking-global");
+
   lista.innerHTML = "";
+  estado.textContent = "⏳ Cargando ranking global...";
 
-  if (ranking.length === 0) {
-    const item = document.createElement("li");
-    item.textContent = "Todavía no hay tiempos registrados.";
-    lista.appendChild(item);
-    return;
+  try {
+    const respuesta = await fetch(`${SHEET_CSV_URL}?tipo=ranking&ts=${Date.now()}`);
+
+    if (!respuesta.ok) {
+      throw new Error(`HTTP ${respuesta.status}`);
+    }
+
+    const ranking = await respuesta.json();
+
+    if (!Array.isArray(ranking) || ranking.length === 0) {
+      estado.textContent = "Todavía no hay resultados en el ranking global.";
+      return;
+    }
+
+    ranking.slice(0, 10).forEach((partida, index) => {
+      const item = document.createElement("li");
+      const tiempo = Number(partida.tiempo);
+      const puntaje = Number(partida.puntaje);
+      const correctas = Number(partida.correctas);
+      const cantidadPreguntas = Number(partida.cantidad_preguntas);
+
+      const posicion = index + 1;
+      const medalla = posicion === 1 ? "🥇" : posicion === 2 ? "🥈" : posicion === 3 ? "🥉" : `${posicion}.`;
+      const tiempoTexto = Number.isFinite(tiempo) ? `${tiempo.toFixed(1)} s` : "—";
+      const puntajeTexto = Number.isFinite(puntaje) ? `${puntaje} pts` : "—";
+      const aciertosTexto = Number.isFinite(correctas) && Number.isFinite(cantidadPreguntas)
+        ? `${correctas}/${cantidadPreguntas}`
+        : "—";
+
+      item.textContent = `${medalla} ${partida.nombre} — ${puntajeTexto} · ${aciertosTexto} · ${tiempoTexto}`;
+      lista.appendChild(item);
+    });
+
+    estado.textContent = `Ranking global · ${ranking.length} ${ranking.length === 1 ? "resultado" : "resultados"} destacados`;
+  } catch (error) {
+    console.error("No se pudo cargar el ranking global.", error);
+    estado.textContent = "⚠️ No se pudo cargar el ranking global. Revisá la conexión e intentá nuevamente.";
   }
-
-  ranking.forEach((partida) => {
-    const item = document.createElement("li");
-    item.textContent = `${partida.nombre} — ${partida.tiempo} s · ${partida.puntos} pts`;
-    lista.appendChild(item);
-  });
 }
 
 function mostrarRankingTiempos(pantallaOrigen) {
@@ -789,6 +760,5 @@ function mostrarRankingTiempos(pantallaOrigen) {
 
 function volverDesdeRankingTiempos() {
   document.getElementById("pantalla-ranking-tiempos").style.display = "none";
-  document.getElementById(pantallaAnteriorRankingTiempos).style.display =
-    "block";
+  document.getElementById(pantallaAnteriorRankingTiempos).style.display = "block";
 }
