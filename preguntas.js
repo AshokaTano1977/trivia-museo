@@ -95,9 +95,6 @@ window.addEventListener("DOMContentLoaded", () => {
     iniciarTrivia();
   });
 
-  document.getElementById("btn-ver-ranking-tiempos").addEventListener("click", () => {
-    mostrarRankingTiempos("pantalla-inicio");
-  });
   document
     .getElementById("btn-ver-ranking-tiempos-final")
     .addEventListener("click", () => {
