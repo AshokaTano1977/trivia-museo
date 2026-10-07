@@ -39,6 +39,7 @@ let contextoAudio = null;
 let inicioPregunta = null;
 let tiempoTotalRespuesta = 0;
 let pantallaAnteriorRankingTiempos = "pantalla-inicio";
+let solicitudRankingGlobal = 0;
 const TIEMPO_POR_PREGUNTA = 15;
 const TIEMPO_EXPLICACION = 4000;
 
@@ -546,7 +547,6 @@ function finalizarTrivia() {
     categoria,
   );
   guardarTiempoEnRanking(nombreJugador, tiempoTotal, puntajeFinal);
-  actualizarRankingTiemposVisual();
   guardarPuntajeEnRanking(
     nombreJugador,
     puntajeFinal,
@@ -702,6 +702,7 @@ function guardarTiempoEnRanking(nombre, tiempo, puntos) {
 }
 
 async function actualizarRankingTiemposVisual() {
+  const idSolicitud = ++solicitudRankingGlobal;
   const lista = document.getElementById("lista-ranking-tiempos");
   const estado = document.getElementById("estado-ranking-global");
 
@@ -716,6 +717,7 @@ async function actualizarRankingTiemposVisual() {
     }
 
     const ranking = await respuesta.json();
+    if (idSolicitud !== solicitudRankingGlobal) return;
 
     if (!Array.isArray(ranking) || ranking.length === 0) {
       estado.textContent = "Todavía no hay resultados en el ranking global.";
@@ -743,6 +745,7 @@ async function actualizarRankingTiemposVisual() {
 
     estado.textContent = `Ranking global · ${ranking.length} ${ranking.length === 1 ? "resultado" : "resultados"} destacados`;
   } catch (error) {
+    if (idSolicitud !== solicitudRankingGlobal) return;
     console.error("No se pudo cargar el ranking global.", error);
     estado.textContent = "⚠️ No se pudo cargar el ranking global. Revisá la conexión e intentá nuevamente.";
   }
