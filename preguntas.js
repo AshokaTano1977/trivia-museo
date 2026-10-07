@@ -1,6 +1,6 @@
 // URL de tu Google Sheets publicado como CSV (reemplaza con tu link real)
 const SHEET_CSV_URL ="https://script.google.com/macros/s/AKfycbyitZZk-9qxOtuIWrkxhPbYoeJ8KRyt0oORXOXFSZ6-yqd1OxTEVDsT5s77vLRo_OWgGA/exec";
-//  "https://script.google.com/macros/s/AKfycbyMRQPr1RDTOrU1zZ_cRTgW5XAp98zNEgAcMEeCLAWfNxrghokrHyks2-PbD1_AW7F1hw/exec";
+
 const URL_WEB_APP =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vSf7mN6wC1ybMOKz1DXWeVjk_kdH6nhXwJRnVDMFAkODkADBkO21aemrcWQkxDSLGZJnnZIdWlqF3d-/pub?gid=0&single=true&output=csv";
 
@@ -63,7 +63,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Intentar actualizar desde Google Sheets en segundo plano
   sincronizarGoogleSheets();
 
-  const inputNombre = document.getElementById("nombre-jugador");
+ const inputNombre = document.getElementById("nombre-jugador");
   const btnComenzar = document.getElementById("btn-comenzar");
 
   inputNombre.addEventListener("input", () => {
@@ -559,8 +559,9 @@ function finalizarTrivia() {
 
 function obtenerCategoria(puntos) {
   if (puntos <= 50) return "Explorador novato";
-  if (puntos < 80) return "Explorador avanzado";
-  return "Maestro explorador";
+  if (puntos > 50 && puntos <=70 ) return "Explorador avanzado";
+  if (puntos > 70 && puntos <=80 ) return "Experto explorador";
+    return "Maestro explorador";
 }
 
 async function guardarPuntajeEnRanking(
@@ -702,7 +703,6 @@ function guardarTiempoEnRanking(nombre, tiempo, puntos) {
 }
 
 async function actualizarRankingTiemposVisual() {
-  const idSolicitud = ++solicitudRankingGlobal;
   const lista = document.getElementById("lista-ranking-tiempos");
   const estado = document.getElementById("estado-ranking-global");
 
@@ -717,35 +717,73 @@ async function actualizarRankingTiemposVisual() {
     }
 
     const ranking = await respuesta.json();
-    if (idSolicitud !== solicitudRankingGlobal) return;
 
     if (!Array.isArray(ranking) || ranking.length === 0) {
       estado.textContent = "Todavía no hay resultados en el ranking global.";
       return;
     }
 
-    ranking.slice(0, 10).forEach((partida, index) => {
-      const item = document.createElement("li");
+    const top10 = ranking.slice(0, 10);
+    const podio = document.getElementById("ranking-podio");
+    podio.innerHTML = "";
+
+    // Podio visual para los tres primeros puestos.
+    top10.slice(0, 3).forEach((partida, index) => {
+      const tarjeta = document.createElement("div");
+      tarjeta.className = `tarjeta-podio puesto-${index + 1}`;
+
       const tiempo = Number(partida.tiempo);
       const puntaje = Number(partida.puntaje);
       const correctas = Number(partida.correctas);
       const cantidadPreguntas = Number(partida.cantidad_preguntas);
 
-      const posicion = index + 1;
-      const medalla = posicion === 1 ? "🥇" : posicion === 2 ? "🥈" : posicion === 3 ? "🥉" : `${posicion}.`;
+      const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
       const tiempoTexto = Number.isFinite(tiempo) ? `${tiempo.toFixed(1)} s` : "—";
       const puntajeTexto = Number.isFinite(puntaje) ? `${puntaje} pts` : "—";
       const aciertosTexto = Number.isFinite(correctas) && Number.isFinite(cantidadPreguntas)
         ? `${correctas}/${cantidadPreguntas}`
         : "—";
 
-      item.textContent = `${medalla} ${partida.nombre} — ${puntajeTexto} · ${aciertosTexto} · ${tiempoTexto}`;
+      tarjeta.innerHTML = `
+        <div class="podio-medalla">${medalla}</div>
+        <div class="podio-puesto">${index + 1}° puesto</div>
+        <div class="podio-nombre"></div>
+        <div class="podio-puntaje">${puntajeTexto}</div>
+        <div class="podio-detalle">${aciertosTexto} · ${tiempoTexto}</div>
+      `;
+      tarjeta.querySelector(".podio-nombre").textContent = partida.nombre || "Visitante";
+      podio.appendChild(tarjeta);
+    });
+
+    // Del 4° al 10° se muestran como tarjetas compactas.
+    top10.slice(3, 10).forEach((partida, index) => {
+      const item = document.createElement("li");
+      item.className = "fila-ranking-global";
+
+      const tiempo = Number(partida.tiempo);
+      const puntaje = Number(partida.puntaje);
+      const correctas = Number(partida.correctas);
+      const cantidadPreguntas = Number(partida.cantidad_preguntas);
+
+      const posicion = index + 4;
+      const tiempoTexto = Number.isFinite(tiempo) ? `${tiempo.toFixed(1)} s` : "—";
+      const puntajeTexto = Number.isFinite(puntaje) ? `${puntaje} pts` : "—";
+      const aciertosTexto = Number.isFinite(correctas) && Number.isFinite(cantidadPreguntas)
+        ? `${correctas}/${cantidadPreguntas}`
+        : "—";
+
+      item.innerHTML = `
+        <span class="ranking-posicion">${posicion}</span>
+        <span class="ranking-nombre"></span>
+        <span class="ranking-puntaje">${puntajeTexto}</span>
+        <span class="ranking-meta">${aciertosTexto} · ${tiempoTexto}</span>
+      `;
+      item.querySelector(".ranking-nombre").textContent = partida.nombre || "Visitante";
       lista.appendChild(item);
     });
 
-    estado.textContent = `Ranking global · ${ranking.length} ${ranking.length === 1 ? "resultado" : "resultados"} destacados`;
+    estado.textContent = `Ranking global · ${top10.length} ${top10.length === 1 ? "resultado destacado" : "resultados destacados"}`;
   } catch (error) {
-    if (idSolicitud !== solicitudRankingGlobal) return;
     console.error("No se pudo cargar el ranking global.", error);
     estado.textContent = "⚠️ No se pudo cargar el ranking global. Revisá la conexión e intentá nuevamente.";
   }

@@ -93,12 +93,19 @@
       </button>
     </div>
 
-     <!-- Pantalla 4: Ranking de tiempos -->
+    <!-- Pantalla 4: Ranking global -->
     <div id="pantalla-ranking-tiempos" class="pantalla" style="display: none">
-      <h2>🏆 Top 10 global</h2>
-      <p class="detalle-juego">Los 10 mejores puntajes de todos los visitantes.</p>
+      <div class="ranking-encabezado">
+        <div class="ranking-trofeo" aria-hidden="true">🏆</div>
+        <h2>Top 10 global</h2>
+        <p class="detalle-juego">Los mejores exploradores de todos los visitantes.</p>
+      </div>
+
       <p id="estado-ranking-global" class="estado-ranking-global" role="status" aria-live="polite"></p>
-      <ol id="lista-ranking-tiempos"></ol>
+
+      <div id="ranking-podio" class="ranking-podio"></div>
+      <ol id="lista-ranking-tiempos" class="lista-ranking-global"></ol>
+
       <button class="btn-secundario" id="btn-volver-ranking-tiempos">
         Volver
       </button>
