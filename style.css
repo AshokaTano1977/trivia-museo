@@ -527,6 +527,13 @@ button {
   box-shadow: 0 8px 20px rgb(109 40 217 / 12%);
 }
 
+#resultado-tiempo {
+  margin: 0 auto 20px;
+  color: var(--azul);
+  font-size: clamp(18px, 4vw, 22px);
+  font-weight: 700;
+}
+
 @media (min-width: 650px) {
   #opciones-container {
     grid-template-columns: 1fr 1fr;

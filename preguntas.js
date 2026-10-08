@@ -533,11 +533,16 @@ function finalizarTrivia() {
   const categoria = obtenerCategoria(puntajeFinal);
 
   document.getElementById("resultado-final").textContent =
-    `¡Excelente trabajo, ${nombreJugador}!`;
+    `🎓 ¡Felicitaciones, ${nombreJugador}!`;
   document.getElementById("resultado-categoria").textContent =
-    `Tu puntaje final es de ${puntajeFinal} puntos.`;
+    `Obtuviste ${respuestasCorrectas}/${totalPreguntas} respuestas correctas`;
   document.getElementById("resultado-detalle").textContent =
-    `${categoria} · ${porcentaje}% de respuestas correctas · ${tiempoTotal} segundos`;
+    `🏆 ${categoria}`;
+  document.getElementById("resultado-tiempo").textContent =
+    `⏱️ Tiempo: ${new Intl.NumberFormat("es-AR", {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }).format(tiempoTotal)} segundos`;
 
   guardarEnRanking(
     nombreJugador,
