@@ -558,10 +558,11 @@ function finalizarTrivia() {
 }
 
 function obtenerCategoria(puntos) {
-  if (puntos <= 50) return "Explorador novato";
-  if (puntos > 50 && puntos <=70 ) return "Explorador avanzado";
-  if (puntos > 70 && puntos <=80 ) return "Experto explorador";
-    return "Maestro explorador";
+  if (puntos <= 50) return "🗺️ Visitante curioso";
+  if (puntos > 50 && puntos <=60 ) return "🔎 Explorador";
+  if (puntos > 60 && puntos <=80 ) return "🧭 Explorador avanzado";
+  if (puntos > 80 && puntos <=90 ) return "🎓 Experto del museo";
+    return "👑 Maestro del museo";
 }
 
 async function guardarPuntajeEnRanking(
