@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061b2d"><title>Museos · Facultad de Medicina</title>
+<style>
+:root{--navy:#061b2d;--gold:#e7bd72;--cream:#f5ead6}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--navy);font-family:Georgia,'Times New Roman',serif;color:var(--cream)}
+.screen{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#12324a 0%,var(--navy) 70%);padding:2.5vh 3vw}.screen.active{display:flex}.poster-wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center}.poster-frame{position:relative;width:min(100%,152vh);aspect-ratio:8/5}.poster{display:block;width:100%;height:100%;object-fit:contain}
+/* QR ubicado sobre el recuadro blanco reservado en el afiche */
+.poster-qr{position:absolute;width:14.2%;height:auto;aspect-ratio:1;object-fit:contain;right:8.9%;bottom:15.7%;background:white;padding:0.45%;}
+.invite{width:min(94vw,1050px);max-height:94vh;display:grid;grid-template-columns:1fr minmax(220px,35%);gap:clamp(20px,4vw,64px);align-items:center;border:1px solid rgba(231,189,114,.55);padding:clamp(24px,5vw,70px);box-shadow:0 0 0 8px rgba(231,189,114,.04),0 20px 70px #0005}.eyebrow{text-transform:uppercase;letter-spacing:.22em;font-size:clamp(12px,1.5vw,18px);color:var(--gold)}h1{font-size:clamp(38px,6.5vw,86px);line-height:1.03;margin:.35em 0;color:var(--cream);font-weight:normal}h1 span{color:var(--gold);font-style:italic}.subtitle{font-size:clamp(18px,2.3vw,30px);line-height:1.35;margin:0 0 1.2em}.callout{font-family:Arial,sans-serif;font-weight:bold;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);background:var(--gold);display:inline-block;padding:14px 20px;font-size:clamp(13px,1.6vw,20px)}.qr-panel{text-align:center;font-family:Arial,sans-serif}.qr-panel img{display:block;width:min(100%,340px);aspect-ratio:1;object-fit:contain;background:white;padding:10px;margin:0 auto 18px}.qr-panel p{font-size:clamp(14px,1.7vw,20px);line-height:1.4;margin:0}.footer{position:absolute;bottom:2vh;left:0;right:0;text-align:center;color:#c9b28e;font:11px Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;opacity:.75}
+@media (orientation:portrait){.screen{padding:2vw}.poster-frame{width:min(100%,153.6vh)}.poster-qr{width:14.2%;right:8.9%;bottom:15.7%}.invite{grid-template-columns:1fr;gap:18px;text-align:center;padding:5vw 7vw;max-height:96vh}.invite h1{font-size:clamp(30px,8vw,54px);margin:.2em 0}.subtitle{font-size:clamp(15px,3.6vw,21px);margin-bottom:.7em}.qr-panel{display:flex;align-items:center;justify-content:center;gap:16px}.qr-panel img{width:min(35vw,190px);margin:0}.qr-panel p{max-width:180px;font-size:clamp(12px,3vw,16px)}.footer{font-size:9px;letter-spacing:.12em}}
+@media (max-width:500px) and (orientation:portrait){.invite{gap:12px}.qr-panel{flex-direction:column}.qr-panel img{width:min(44vw,180px)}.qr-panel p{max-width:unset}}
+</style></head><body>
+<section class="screen active" id="welcome" aria-label="Publicidad de bienvenida"><div class="poster-wrap"><div class="poster-frame"><img class="poster" 
+    src="imagenes/publicidad-museo.png" alt="¿Qué tipo de explorador sos? Museos · Facultad de Medicina"><img class="poster-qr" 
+    src="imagenes/qr-trivia.png" alt="Código QR para entrar a la trivia"></div></div></section>
+
+    <section class="screen" id="play" aria-label="Invitación a jugar"><div class="invite"><div><div class="eyebrow">Museos · Facultad de Medicina</div><h1>¿Podés llegar<br>al <span>TOP 10?</span></h1><p class="subtitle">Poné a prueba tus conocimientos y descubrí cuánto sabés sobre la historia de la medicina.</p><div class="callout">Escaneá y jugá</div></div><div class="qr-panel">
+    <img src="imagenes/qr-trivia.png" alt="Escaneá este código QR para jugar"><p>Usá la cámara de tu celular para entrar a la trivia.</p></div></div><div class="footer">Una experiencia interactiva de los Museos · Facultad de Medicina</div></section>
+<script>
+// Alterna entre bienvenida y pantalla de juego. Toque/clic permite avanzar inmediatamente.
+const screens=[document.getElementById('welcome'),document.getElementById('play')];let current=0;const intervalMs=15000;let timer;
+function show(i){current=i;screens.forEach((s,n)=>s.classList.toggle('active',n===i));clearTimeout(timer);timer=setTimeout(()=>show((current+1)%screens.length),intervalMs)}
+document.addEventListener('click',()=>show((current+1)%screens.length));document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();show((current+1)%screens.length)}else if(e.key==='ArrowLeft')show((current+screens.length-1)%screens.length)});timer=setTimeout(()=>show(1),intervalMs);
+</script></body></html>

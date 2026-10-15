@@ -1,0 +1,15 @@
+PUBLICIDAD PARA TABLETS — MUSEOS · FACULTAD DE MEDICINA
+
+Contenido:
+- index.html: página publicitaria con dos pantallas que alternan cada 15 segundos.
+- assets/publicidad-museo.png: afiche original.
+- assets/qr-trivia.png: QR suministrado. Fue verificado y dirige a https://ashokatano1977.github.io/trivia-museo/
+
+PRUEBA LOCAL:
+1. Descomprimí la carpeta.
+2. Abrí index.html en Chrome o Edge.
+3. Para pantalla completa, presioná F11.
+4. Hacé clic o tocá la pantalla para pasar a la siguiente pieza publicitaria.
+
+PUBLICACIÓN:
+Para que las tablets la abran por internet, hay que publicar index.html y la carpeta assets en un alojamiento web. Esta entrega todavía no publica los archivos en internet ni configura el inicio automático/kiosco de las tablets.
