@@ -48,14 +48,19 @@ const NOMBRE_MINIMO = 2;
 const NOMBRE_MAXIMO = 15;
 const MAX_APARICIONES_MISMO_NOMBRE_RANKING = 2;
 const PALABRAS_PROHIBIDAS = [
-  "puta", "puto", "putas", "putos", "mierda", "mierdas", "pelotudo",
-  "pelotuda", "pelotudos", "pelotudas", "boludo", "boluda", "boludos",
-  "boludas", "culo", "culos", "concha", "conchuda", "conchudo",
-  "pija", "pijas", "pito", "verga", "verg", "cojudo", "cojuda",
-  "cojudos", "cojudas", "forro", "forra", "forros", "forras",
-  "choto", "chota", "chotos", "chotas", "hdp", "hijodeputa",
-  "hijaputa", "cabron", "cabrona", "cabrones", "carajo", "joder",
-  "fuck", "fucking", "shit", "bitch", "asshole", "dick", "pussy"
+  "asshole","ano",
+  "bitch", "boludo", "boluda", "boludos","boludas",  
+  "cojudos", "cojudas", "culo", "culos", "concha", "conchuda", "conchudo","cojudo", "cojuda", "choto", "chota", "chotos", "chotas",
+  "cabron", "cabrona", "cabrones", "carajo",
+  "dick",
+  "elano",  
+  "forro", "forra", "forros", "forras", "fuck", "fucking",
+  "hdp", "hijodeputa", "hijaputa", 
+  "joder",
+  "mierda", "mierdas",  
+  "pelotuda", "pelotudos", "pelotudas", "pija", "pijas", "pito", "puta", "puto", "putas", "putos", "pelotudo",  
+  "shit",    
+   "verga", "verg"
 ];
 
 // Inicialización al cargar la página
