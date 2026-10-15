@@ -289,12 +289,6 @@ function iniciarTrivia() {
   mostrarPreguntaActual();
 }
 
-function formatearPuntaje(valor) {
-  return Number(valor)
-    .toFixed(3)
-    .replace(/\.0+$|(?<=\.\d)0+$/g, "");
-}
-
 function mostrarPreguntaActual() {
   clearInterval(temporizadorPregunta);
   clearTimeout(temporizadorAvance);
@@ -309,7 +303,7 @@ function mostrarPreguntaActual() {
   document.getElementById("explicacion-texto").style.display = "none";
   const q = preguntasPartida[indicePreguntaActual];
   document.getElementById("info-puntaje").textContent =
-    `Puntaje: ${formatearPuntaje(puntajeActual)}`;
+    `Puntaje: ${Math.round(puntajeActual)}`;
   document.getElementById("texto-pregunta").textContent =
     `${indicePreguntaActual + 1}. ${q.pregunta}`;
 
@@ -533,7 +527,9 @@ function finalizarTrivia() {
   const categoria = obtenerCategoria(puntajeFinal);
 
   document.getElementById("resultado-final").textContent =
-    `🎓 ¡Felicitaciones, ${nombreJugador}!`;
+    puntajeFinal <= 50
+      ? `🎓 ¡Gracias por participar, ${nombreJugador}!`
+      : `🎓 ¡Felicitaciones, ${nombreJugador}!`;
   document.getElementById("resultado-categoria").textContent =
     `Obtuviste ${respuestasCorrectas}/${totalPreguntas} respuestas correctas`;
   document.getElementById("resultado-detalle").textContent =
