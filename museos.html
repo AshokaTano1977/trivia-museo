@@ -6,6 +6,33 @@
 <style>
 :root{--navy:#061b2d;--gold:#e7bd72;--cream:#f5ead6}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--navy);font-family:Georgia,'Times New Roman',serif;color:var(--cream)}
 .screen{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#12324a 0%,var(--navy) 70%);padding:2.5vh 3vw}.screen.active{display:flex}.poster-wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center}.poster-frame{position:relative;width:min(100%,152vh);aspect-ratio:8/5}.poster{display:block;width:100%;height:100%;object-fit:contain}
+#play,#ranking,.learning-screen{background-image:
+url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 700' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='rgb(255,248,232)' stroke-opacity='.78' stroke-width='1.5' stroke-linecap='round' stroke-dasharray='1 10'%3E%3Cpath d='M25 155L95 92L166 132L232 66'/%3E%3Cpath d='M30 520L102 460L176 505L242 445'/%3E%3Cpath d='M755 92L820 48L884 102L960 57'/%3E%3Cpath d='M748 505L815 455L890 510L970 450'/%3E%3Cpath d='M360 55L410 90L462 44'/%3E%3Cpath d='M545 625L605 572L665 615'/%3E%3C/g%3E%3Cg fill='rgb(255,248,232)'%3E%3Ccircle cx='25' cy='155' r='4.5'/%3E%3Ccircle cx='95' cy='92' r='2'/%3E%3Ccircle cx='166' cy='132' r='5'/%3E%3Ccircle cx='232' cy='66' r='2.5'/%3E%3Ccircle cx='30' cy='520' r='2.5'/%3E%3Ccircle cx='102' cy='460' r='4'/%3E%3Ccircle cx='176' cy='505' r='2'/%3E%3Ccircle cx='242' cy='445' r='5'/%3E%3Ccircle cx='755' cy='92' r='5'/%3E%3Ccircle cx='820' cy='48' r='2'/%3E%3Ccircle cx='884' cy='102' r='4'/%3E%3Ccircle cx='960' cy='57' r='3'/%3E%3Ccircle cx='748' cy='505' r='2.5'/%3E%3Ccircle cx='815' cy='455' r='5'/%3E%3Ccircle cx='890' cy='510' r='2'/%3E%3Ccircle cx='970' cy='450' r='4.5'/%3E%3Ccircle cx='360' cy='55' r='3'/%3E%3Ccircle cx='410' cy='90' r='4'/%3E%3Ccircle cx='462' cy='44' r='2'/%3E%3Ccircle cx='545' cy='625' r='3'/%3E%3Ccircle cx='605' cy='572' r='4.5'/%3E%3Ccircle cx='665' cy='615' r='2'/%3E%3C/g%3E%3Cg fill='rgb(255,211,137)'%3E%3Ccircle cx='166' cy='132' r='2'/%3E%3Ccircle cx='242' cy='445' r='2'/%3E%3Ccircle cx='884' cy='102' r='2'/%3E%3Ccircle cx='815' cy='455' r='2'/%3E%3C/g%3E%3C/svg%3E"),
+radial-gradient(circle at 7% 17%,rgba(255,248,232,.98) 0 2px,transparent 3.5px),
+radial-gradient(circle at 13% 23%,rgba(255,211,137,.95) 0 2.5px,transparent 4px),
+radial-gradient(circle at 20% 14%,rgba(255,248,232,.9) 0 2px,transparent 3.5px),
+radial-gradient(circle at 29% 21%,rgba(255,248,232,.85) 0 1.5px,transparent 3px),
+radial-gradient(circle at 39% 11%,rgba(255,211,137,.9) 0 2px,transparent 3.5px),
+radial-gradient(circle at 51% 17%,rgba(255,248,232,.85) 0 1.5px,transparent 3px),
+radial-gradient(circle at 63% 10%,rgba(255,248,232,.9) 0 2px,transparent 3.5px),
+radial-gradient(circle at 72% 21%,rgba(255,211,137,.9) 0 2px,transparent 3.5px),
+radial-gradient(circle at 78% 12%,rgba(255,248,232,.98) 0 2.5px,transparent 4px),
+radial-gradient(circle at 85% 20%,rgba(255,211,137,.95) 0 2px,transparent 3.5px),
+radial-gradient(circle at 92% 14%,rgba(255,248,232,.95) 0 2px,transparent 3.5px),
+radial-gradient(circle at 96% 31%,rgba(255,248,232,.8) 0 1.5px,transparent 3px),
+radial-gradient(circle at 5% 48%,rgba(255,211,137,.85) 0 1.5px,transparent 3px),
+radial-gradient(circle at 9% 76%,rgba(255,211,137,.95) 0 2px,transparent 3.5px),
+radial-gradient(circle at 16% 82%,rgba(255,248,232,.98) 0 2.5px,transparent 4px),
+radial-gradient(circle at 23% 74%,rgba(255,248,232,.9) 0 2px,transparent 3.5px),
+radial-gradient(circle at 34% 88%,rgba(255,211,137,.85) 0 1.5px,transparent 3px),
+radial-gradient(circle at 47% 79%,rgba(255,248,232,.85) 0 2px,transparent 3.5px),
+radial-gradient(circle at 59% 87%,rgba(255,211,137,.9) 0 2px,transparent 3.5px),
+radial-gradient(circle at 68% 73%,rgba(255,248,232,.85) 0 1.5px,transparent 3px),
+radial-gradient(circle at 76% 79%,rgba(255,248,232,.95) 0 2px,transparent 3.5px),
+radial-gradient(circle at 83% 72%,rgba(255,211,137,.98) 0 2.5px,transparent 4px),
+radial-gradient(circle at 91% 81%,rgba(255,248,232,.95) 0 2px,transparent 3.5px),
+radial-gradient(circle at 97% 61%,rgba(255,211,137,.8) 0 1.5px,transparent 3px),
+radial-gradient(ellipse at center,#12324a 0%,var(--navy) 70%);background-size:100% 100%,auto; background-repeat:no-repeat,repeat}
 /* QR ubicado sobre el recuadro blanco reservado en el afiche */
 .poster-qr{position:absolute;width:14.2%;height:auto;aspect-ratio:1;object-fit:contain;right:8.9%;bottom:15.7%;background:white;padding:0.45%;}
 .invite{width:min(94vw,1050px);max-height:94vh;display:grid;grid-template-columns:1fr minmax(220px,35%);gap:clamp(20px,4vw,64px);align-items:center;border:1px solid rgba(231,189,114,.55);padding:clamp(24px,5vw,70px);box-shadow:0 0 0 8px rgba(231,189,114,.04),0 20px 70px #0005}.eyebrow{text-transform:uppercase;letter-spacing:.22em;font-size:clamp(12px,1.5vw,18px);color:var(--gold)}h1{font-size:clamp(38px,6.5vw,86px);line-height:1.03;margin:.35em 0;color:var(--cream);font-weight:normal}h1 span{color:var(--gold);font-style:italic}.subtitle{font-size:clamp(18px,2.3vw,30px);line-height:1.35;margin:0 0 1.2em}.callout{font-family:Arial,sans-serif;font-weight:bold;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);background:var(--gold);display:inline-block;padding:14px 20px;font-size:clamp(13px,1.6vw,20px)}.qr-panel{text-align:center;font-family:Arial,sans-serif}.qr-panel img{display:block;width:min(100%,340px);aspect-ratio:1;object-fit:contain;background:white;padding:10px;margin:0 auto 18px}.qr-panel p{font-size:clamp(14px,1.7vw,20px);line-height:1.4;margin:0}.footer{position:absolute;bottom:2vh;left:0;right:0;text-align:center;color:#c9b28e;font:11px Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;opacity:.75}
